@@ -12,7 +12,8 @@ RM = rm -f
 
 SRC = main.cpp \
 	WavefunctionRenderer.cpp \
-	Framebuffer.cpp
+	Framebuffer.cpp \
+	ray.cpp \
 
 OBJ = $(patsubst %.cpp, $(OBJ_DIR)%.o, $(SRC))
 DEP = $(OBJ:.o=.d)

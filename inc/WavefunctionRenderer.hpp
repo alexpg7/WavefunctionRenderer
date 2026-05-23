@@ -69,3 +69,8 @@ class Framebuffer
 		int getWidth() const;
 		int getHeight() const;
 };
+
+//aux functions
+Ray	generateRay(int x, int y, int width, int height, double fov);
+Color	traceRay(const Ray& r, const Volume& v);
+double	sampleVolume(const Volume& v, double x, double y, double z);

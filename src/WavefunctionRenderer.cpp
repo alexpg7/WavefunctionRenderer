@@ -69,6 +69,8 @@ void	WavefunctionRenderer::show()
 
 	sf::Sprite sprite(texture);
 
+	double	fov = 1.0;
+	Color		color;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -82,7 +84,12 @@ void	WavefunctionRenderer::show()
 		for (int y = 0; y < fb.getHeight(); y++)
 		{
 			for (int x = 0; x < fb.getWidth(); x++)
-				fb.setPixel(x, y, {(uint8_t)(x % 255), (uint8_t)(y % 255), 128, 255});
+			{
+				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), fov);
+
+				color = traceRay(ray, _volume);
+				fb.setPixel(x, y, color);
+			}
 		}
 
 		texture.update(fb.raw());
