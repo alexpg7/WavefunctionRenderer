@@ -1,45 +1,41 @@
 #include "WavefunctionRenderer.hpp"
 
-Ray	generateRay(int x, int y, int width, int height, double fov)
+Ray generateRay(int x, int y, int width, int height, double scale)
 {
-	double aspect = (double)width / (double)height;
-
-	double px = (2.0 * ((x + 0.5) / (double)width) - 1.0) * aspect * std::tan(fov * 0.5);
-
-	double py = (1.0 - 2.0 * ((y + 0.5) / (double)height)) * std::tan(fov * 0.5);
-
 	Ray r;
 
-	r.ox = 0.0;
-	r.oy = 0.0;
-	r.oz = -5.0;
+	double py = (((double)x / width) - 0.5) * scale;
 
-	r.dx = px;
-	r.dy = py;
-	r.dz = 1.0;
+	double pz = (0.5 - ((double)y / height)) * scale;
 
-	double norm = std::sqrt(r.dx*r.dx + r.dy*r.dy + r.dz*r.dz);
+	// empezar fuera del volumen en X
+	r.ox = -scale;
+	r.oy = py;
+	r.oz = pz;
 
-	r.dx /= norm;
-	r.dy /= norm;
-	r.dz /= norm;
+	// rayos paralelos al eje X
+	r.dx = 1.0;
+	r.dy = 0.0;
+	r.dz = 0.0;
 
 	return r;
 }
 
-double sampleVolume(const Volume& v, double x, double y, double z)
+double sampleVolume(const Volume& v, double x, double y, double z, double scale)
 {
-	int ix = (int)(x + v.nx * 0.5);
-	int iy = (int)(y + v.ny * 0.5);
-	int iz = (int)(z + v.nz * 0.5);
+	int ix = (int)(((x / scale) + 0.5) * v.voxels);
 
-	if (ix < 0 || ix >= v.nx || iy < 0 || iy >= v.ny || iz < 0 || iz >= v.nz)
+	int iy = (int)(((y / scale) + 0.5) * v.voxels);
+
+	int iz = (int)(((z / scale) + 0.5) * v.voxels);
+
+	if (ix < 0 || ix >= v.voxels || iy < 0 || iy >= v.voxels || iz < 0 || iz >= v.voxels)
 		return 0.0;
 
-	return v.data[ix + iy * v.nx + iz * v.nx * v.ny];
+	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
-Color traceRay(const Ray& r, const Volume& v)
+Color traceRay(const Ray& r, const Volume& v, double scale)
 {
 	double t = 0.0;
 	double step = 0.05;
@@ -52,9 +48,10 @@ Color traceRay(const Ray& r, const Volume& v)
 		double y = r.oy + r.dy * t;
 		double z = r.oz + r.dz * t;
 
-		double d = sampleVolume(v, x, y, z);
+		double d = sampleVolume(v, x, y, z, scale);
 
-		acc += (1.0 - exp(-d * 2.0)) * step * 0.1;
+		acc += d * 0.08;
+		//(1.0 - exp(-d * 2.0)) * step * 0.1;
 
 		if (acc > 1.0)
 			acc = 1.0;

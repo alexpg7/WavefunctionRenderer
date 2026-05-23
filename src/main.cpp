@@ -1,19 +1,26 @@
 #include "WavefunctionRenderer.hpp"
 
-std::complex<double> psi(double x, double y, double z)
-{
-	double r2 = x*x + y*y + z*z;
-	return std::pow(2.0 / M_PI, 3.0 / 4.0) * std::exp(-r2);
+std::complex<double> psi(double x, double y, double z) {
+	double r = std::sqrt(x*x + y*y + z*z);
+
+	if (r < 1e-12) return std::complex<double>(0.0, 0.0);
+
+	double radial = std::exp(-r);
+	double angular = z;
+	double k = 1.0;
+	std::complex<double> phase = std::exp(std::complex<double>(0.0, k * r));
+
+	return angular * radial * phase;
 }
 
 int main()
 {
 	WavefunctionRenderer wave;
 
-	wave.setResolution(800, 600);
+	wave.setResolution(800, 800);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setWaveFunction(psi);
 	wave.setGrid(64);
-	wave.setScale(0.2);
+	wave.setScale(5);
 	wave.show();
 }

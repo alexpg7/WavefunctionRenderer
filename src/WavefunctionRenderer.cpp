@@ -31,7 +31,7 @@ void	WavefunctionRenderer::setWaveFunction(const std::function<std::complex<doub
 void	WavefunctionRenderer::setGrid(unsigned int x)
 {
 	_grid = x;
-	_volume = Volume(x, x, x);
+	_volume = Volume(x);
 }
 
 void	WavefunctionRenderer::setScale(double scale)
@@ -41,15 +41,15 @@ void	WavefunctionRenderer::setScale(double scale)
 
 void WavefunctionRenderer::buildVolume()
 {
-	for (int z = 0; z < _volume.nz; z++)
+	for (int z = 0; z < _volume.voxels; z++)
 	{
-		for (int y = 0; y < _volume.ny; y++)
+		for (int y = 0; y < _volume.voxels; y++)
 		{
-			for (int x = 0; x < _volume.nx; x++)
+			for (int x = 0; x < _volume.voxels; x++)
 			{
-				double px = (x - _volume.nx * 0.5) * _scale;
-				double py = (y - _volume.ny * 0.5) * _scale;
-				double pz = (z - _volume.nz * 0.5) * _scale;
+				double px = ((double)x / _volume.voxels - 0.5) * _scale;
+				double py = ((double)y / _volume.voxels - 0.5) * _scale;
+				double pz = ((double)z / _volume.voxels - 0.5) * _scale;
 
 				_volume.at(x, y, z) = std::norm(_psi(px, py, pz));
 			}
@@ -60,7 +60,7 @@ void WavefunctionRenderer::buildVolume()
 void	WavefunctionRenderer::show()
 {
 	//check if everything is set up
-	WavefunctionRenderer::buildVolume();
+	this->buildVolume();
 	sf::RenderWindow window(sf::VideoMode(_W, _H), _title);
 	Framebuffer fb(_W, _H);
 
@@ -68,8 +68,7 @@ void	WavefunctionRenderer::show()
 	texture.create(_W, _H);
 
 	sf::Sprite sprite(texture);
-
-	double	fov = 1.0;
+;
 	Color		color;
 	while (window.isOpen())
 	{
@@ -85,9 +84,9 @@ void	WavefunctionRenderer::show()
 		{
 			for (int x = 0; x < fb.getWidth(); x++)
 			{
-				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), fov);
+				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale);
 
-				color = traceRay(ray, _volume);
+				color = traceRay(ray, _volume, _scale);
 				fb.setPixel(x, y, color);
 			}
 		}

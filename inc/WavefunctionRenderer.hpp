@@ -9,16 +9,16 @@
 
 struct Volume
 {
-	int nx, ny, nz;
+	int voxels;
 	std::vector<double> data;
 
-	Volume(int x, int y, int z): nx(x), ny(y), nz(z), data(x * y * z, 0.0)
+	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
 	{
 	}
 
 	double& at(int x, int y, int z)
 	{
-		return data[x + y * nx + z * nx * ny];
+		return data[x + y * voxels + z * voxels * voxels];
 	}
 };
 
@@ -35,7 +35,7 @@ class WavefunctionRenderer
 		int	_H;
 		std::string	_title = "";
 		void	buildVolume();
-		Volume	_volume = Volume(64, 64, 64);
+		Volume	_volume = Volume(64);
 		unsigned int	_grid;
 		std::function<std::complex<double>(double, double, double)> _psi = nullptr;
 		double	_scale;
@@ -71,6 +71,6 @@ class Framebuffer
 };
 
 //aux functions
-Ray	generateRay(int x, int y, int width, int height, double fov);
-Color	traceRay(const Ray& r, const Volume& v);
-double	sampleVolume(const Volume& v, double x, double y, double z);
+Ray	generateRay(int x, int y, int width, int height, double scale);
+Color	traceRay(const Ray& r, const Volume& v, double scale);
+double	sampleVolume(const Volume& v, double x, double y, double z, double scale);
