@@ -1,6 +1,6 @@
 #include "WavefunctionRenderer.hpp"
 
-Ray generateRay(int x, int y, int width, int height, double scale)
+Ray generateRay(int x, int y, int width, int height, double scale, Camera& cam)
 {
 	Ray r;
 
@@ -8,12 +8,10 @@ Ray generateRay(int x, int y, int width, int height, double scale)
 
 	double pz = (0.5 - ((double)y / height)) * scale;
 
-	// empezar fuera del volumen en X
 	r.ox = -scale;
 	r.oy = py;
 	r.oz = pz;
 
-	// rayos paralelos al eje X
 	r.dx = 1.0;
 	r.dy = 0.0;
 	r.dz = 0.0;

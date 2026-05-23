@@ -6,6 +6,9 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_H = 100;
 	_grid = 64;
 	_scale = 0.1;
+	cam.theta = M_PI / 2.0;
+	cam.fov = 0;
+	cam.phi = 0;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -57,6 +60,24 @@ void WavefunctionRenderer::buildVolume()
 	}
 }
 
+void handleCameraInput(Camera& cam)
+{
+	double step = 0.05; // ángulo fijo por pulsación
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		cam.phi -= step;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		cam.phi += step;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		cam.theta += step;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		cam.theta -= step;
+	cam.theta = std::clamp(cam.theta, 0.01, M_PI - 0.01);
+}
+
 void	WavefunctionRenderer::show()
 {
 	//check if everything is set up
@@ -79,12 +100,14 @@ void	WavefunctionRenderer::show()
 				window.close();
 		}
 
+		handleCameraInput(cam);
+
 		fb.clear({0, 0, 0, 255});
 		for (int y = 0; y < fb.getHeight(); y++)
 		{
 			for (int x = 0; x < fb.getWidth(); x++)
 			{
-				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale);
+				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale, cam);
 
 				color = traceRay(ray, _volume, _scale);
 				fb.setPixel(x, y, color);

@@ -22,6 +22,13 @@ struct Volume
 	}
 };
 
+struct Camera
+{
+	double	theta;
+	double	phi;
+	double	fov;
+};
+
 struct Ray
 {
 	double ox, oy, oz;
@@ -42,6 +49,7 @@ class WavefunctionRenderer
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
+		Camera	cam;
 		void	setResolution(int W, int H);
 		void	setTitle(std::string title);
 		void	setWaveFunction(const std::function<std::complex<double>(double, double, double)>& psi);
@@ -71,6 +79,6 @@ class Framebuffer
 };
 
 //aux functions
-Ray	generateRay(int x, int y, int width, int height, double scale);
+Ray	generateRay(int x, int y, int width, int height, double scale, Camera& cam);
 Color	traceRay(const Ray& r, const Volume& v, double scale);
 double	sampleVolume(const Volume& v, double x, double y, double z, double scale);
