@@ -14,6 +14,6 @@ int main()
 	wave.setTitle("WavefunctionRenderer");
 	wave.setWaveFunction(psi);
 	wave.setGrid(64);
-	wave.setScale(0.1);
+	wave.setScale(0.2);
 	wave.show();
 }

@@ -54,7 +54,7 @@ Color traceRay(const Ray& r, const Volume& v)
 
 		double d = sampleVolume(v, x, y, z);
 
-		acc += d * 0.01;
+		acc += (1.0 - exp(-d * 2.0)) * step * 0.1;
 
 		if (acc > 1.0)
 			acc = 1.0;

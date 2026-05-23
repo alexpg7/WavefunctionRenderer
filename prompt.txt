@@ -1,0 +1,1 @@
+lo que no acabo de entender es por que sale suave si esta todo con voxels. A demás no se como has implementado los rayos, son paralelos o como cambian con el fov? yo creo que lo inteligente es que salgan de la pantalla (cada uno desde una posición diferente) y el fov solo aumente el ángulo respecto al centro de la pantalla
