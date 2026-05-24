@@ -111,17 +111,11 @@ Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 {
 	float t = 0.0f;
-	float step = scale / 20.0f;
 
+	float step = scale / 30.0f;
 	float maxDist = 2.0f * std::sqrt(3.0f) * scale;
 
-	const float iso = 0.2f;
-
-	float prev = sampleVolume(v,
-							r.ox,
-							r.oy,
-							r.oz,
-							scale);
+	const float iso = 0.1f;
 
 	float opacity = 0.0f;
 
@@ -132,16 +126,15 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 		float z = r.oz + r.dz * t;
 
 		float d = sampleVolume(v, x, y, z, scale);
+		float dist = fabs(d - iso);
+		float w = 0.5 * expf(-(dist * dist) / (2.0f * 0.02f * 0.02f));
 
-		// DETECCIÓN DE CRUCE DE ISO-SUPERFICIE
-		if ((prev < iso && d >= iso) || (prev > iso && d <= iso))
-		{
-			opacity += 0.3f; // cuánto suma cada cruce
-		}
+		opacity += w * step;
 
-		prev = d;
 		t += step;
 	}
+
+	opacity = 1.0f - expf(-opacity * 5.0f);
 
 	if (opacity > 1.0f)
 		opacity = 1.0f;

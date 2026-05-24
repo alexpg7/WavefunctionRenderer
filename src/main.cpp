@@ -20,7 +20,7 @@ int main()
 	wave.setResolution(400, 400);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setWaveFunction(psi);
-	wave.setGrid(128);
+	wave.setGrid(256);
 	wave.setScale(7);
 	wave.setMode(Mode::Surface);
 	wave.show();
