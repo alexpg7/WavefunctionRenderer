@@ -1,21 +1,21 @@
 #include "WavefunctionRenderer.hpp"
 
-Ray generateRay(int x, int y, int width, int height, double scale, Camera& cam)
+Ray generateRay(int x, int y, int width, int height, float scale, Camera& cam)
 {
 	Ray r;
 
-	double py = (((double)x / width) - 0.5) * scale;
+	float py = (((float)x / width) - 0.5) * scale;
 
-	double px = (((double)y / height) - 0.5) * scale;
+	float px = (((float)y / height) - 0.5) * scale;
 
-	double ox = px;
-	double oy = py;
-	double oz = std::sqrt(3) * scale;
+	float ox = px;
+	float oy = py;
+	float oz = std::sqrt(3) * scale;
 
-	double	st = std::sin(cam.theta);
-	double	ct = std::cos(cam.theta);
-	double	sp = std::sin(cam.phi);
-	double	cp = std::cos(cam.phi);
+	float	st = std::sin(cam.theta);
+	float	ct = std::cos(cam.theta);
+	float	sp = std::sin(cam.phi);
+	float	cp = std::cos(cam.phi);
 
 	r.ox = ox * cp * ct - oy * sp + oz * cp * st;
 	r.oy = ox * sp * ct + oy * cp + oz * sp * st;
@@ -28,7 +28,7 @@ Ray generateRay(int x, int y, int width, int height, double scale, Camera& cam)
 	return r;
 }
 
-double sampleVolume(const Volume& v, double x, double y, double z, double scale)
+float sampleVolume(const Volume& v, float x, float y, float z, float scale)
 {
 	int ix = (int)(((x / scale) + 0.5) * v.voxels);
 
@@ -42,25 +42,28 @@ double sampleVolume(const Volume& v, double x, double y, double z, double scale)
 	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
-Color	traceRay(const Ray& r, const Volume& v, double scale)
+Color	traceRay(const Ray& r, const Volume& v, float scale)
 {
-	double t = 0.0;
-	double step = scale / 100.0;
+	float t = 0.0;
+	float step = scale / 50.0;
 
-	double acc = 0.0;
-	double max = 2 * std::sqrt(3) * scale;
+	float acc = 0.0;
+	float max = 2 * std::sqrt(3) * scale;
 	while (t < max)
 	{
-		double x = r.ox + r.dx * t;
-		double y = r.oy + r.dy * t;
-		double z = r.oz + r.dz * t;
+		float x = r.ox + r.dx * t;
+		float y = r.oy + r.dy * t;
+		float z = r.oz + r.dz * t;
 
-		double d = sampleVolume(v, x, y, z, scale);
+		float d = sampleVolume(v, x, y, z, scale);
 
-		acc += d * 0.08 * 5.0 / scale;
+		acc += d * 0.1 * 25 * step;
 
 		if (acc > 1.0)
+		{
 			acc = 1.0;
+			break;
+		}
 
 		t += step;
 	}
@@ -70,28 +73,34 @@ Color	traceRay(const Ray& r, const Volume& v, double scale)
 	return {c, c, c, 255};
 }
 
-Color	traceRay2(const Ray& r, const Volume& v, double scale)
+Color traceRay2(const Ray& r, const Volume& v, float scale)
 {
-	double t = 0.0;
-	double step = scale / 100.0;
+	float t = 0.0f;
+	float step = scale / 10.0f;
 
-	double acc = 0.0;
-	double max = 2 * std::sqrt(3) * scale;
-	while (t < max)
+	float maxDist = 2.0f * std::sqrt(3.0f) * scale;
+	float densityScale = 0.4f * 5.0f / scale;
+
+	while (t < maxDist)
 	{
-		double x = r.ox + r.dx * t;
-		double y = r.oy + r.dy * t;
-		double z = r.oz + r.dz * t;
+		float x = r.ox + r.dx * t;
+		float y = r.oy + r.dy * t;
+		float z = r.oz + r.dz * t;
 
-		double d = sampleVolume(v, x, y, z, scale);
+		float d = sampleVolume(v, x, y, z, scale);
+		float p = d * densityScale * step;
 
-		acc += d * 0.08 * 5.0 / scale;
+		if (p > 1.0f) p = 1.0f;
 
-		if (acc > 1.0)
-			acc = 1.0;
+		float rnd = (float)rand() / (float)RAND_MAX;
+
+		if (rnd < p)
+		{
+			uint8_t c = 255;
+			return {c, c, c, 255};
+		}
 
 		t += step;
 	}
-
-	return {255, 255, 255, 255};
+	return {0, 0, 0, 255};
 }

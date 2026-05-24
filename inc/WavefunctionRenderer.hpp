@@ -10,13 +10,13 @@
 struct Volume
 {
 	int voxels;
-	std::vector<double> data;
+	std::vector<float> data;
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
 	{
 	}
 
-	double& at(int x, int y, int z)
+	float& at(int x, int y, int z)
 	{
 		return data[x + y * voxels + z * voxels * voxels];
 	}
@@ -24,15 +24,15 @@ struct Volume
 
 struct Camera
 {
-	double	theta;
-	double	phi;
-	double	fov;
+	float	theta;
+	float	phi;
+	float	fov;
 };
 
 struct Ray
 {
-	double ox, oy, oz;
-	double dx, dy, dz;
+	float ox, oy, oz;
+	float dx, dy, dz;
 };
 
 struct Color
@@ -64,25 +64,28 @@ class WavefunctionRenderer
 		void	buildVolume();
 		void	paintScreen(Framebuffer& fb);
 		void	handleCameraInput(Camera& cam, Framebuffer& fb);
-		double	_dt;
+		bool	_dragging = false;
+		sf::Vector2i	_lastMouse;
+		sf::RenderWindow *_window;
+		float	_dt;
 		Volume	_volume = Volume(64);
 		unsigned int	_grid;
-		std::function<std::complex<double>(double, double, double)> _psi = nullptr;
-		double	_scale;
+		std::function<std::complex<float>(float, float, float)> _psi = nullptr;
+		float	_scale;
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
 		Camera	cam;
 		void	setResolution(int W, int H);
 		void	setTitle(std::string title);
-		void	setWaveFunction(const std::function<std::complex<double>(double, double, double)>& psi);
+		void	setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi);
 		void	setGrid(unsigned int x);
-		void	setScale(double scale);
+		void	setScale(float scale);
 		void	show();
 };
 
 //aux functions
-Ray	generateRay(int x, int y, int width, int height, double scale, Camera& cam);
-Color	traceRay(const Ray& r, const Volume& v, double scale);
-Color	traceRay2(const Ray& r, const Volume& v, double scale);
-double	sampleVolume(const Volume& v, double x, double y, double z, double scale);
+Ray	generateRay(int x, int y, int width, int height, float scale, Camera& cam);
+Color	traceRay(const Ray& r, const Volume& v, float scale);
+Color	traceRay2(const Ray& r, const Volume& v, float scale);
+float	sampleVolume(const Volume& v, float x, float y, float z, float scale);

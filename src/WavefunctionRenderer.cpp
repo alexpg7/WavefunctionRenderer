@@ -13,6 +13,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 
 WavefunctionRenderer::~WavefunctionRenderer()
 {
+	delete _window;
 }
 
 void	WavefunctionRenderer::setResolution(int W, int H)
@@ -26,7 +27,7 @@ void	WavefunctionRenderer::setTitle(std::string title)
 	_title = title;
 }
 
-void	WavefunctionRenderer::setWaveFunction(const std::function<std::complex<double>(double, double, double)>& psi)
+void	WavefunctionRenderer::setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)
 {
 	_psi = psi;
 }
@@ -37,7 +38,7 @@ void	WavefunctionRenderer::setGrid(unsigned int x)
 	_volume = Volume(x);
 }
 
-void	WavefunctionRenderer::setScale(double scale)
+void	WavefunctionRenderer::setScale(float scale)
 {
 	_scale = scale;
 }
@@ -50,9 +51,9 @@ void WavefunctionRenderer::buildVolume()
 		{
 			for (int x = 0; x < _volume.voxels; x++)
 			{
-				double px = ((double)x / _volume.voxels - 0.5) * _scale;
-				double py = ((double)y / _volume.voxels - 0.5) * _scale;
-				double pz = ((double)z / _volume.voxels - 0.5) * _scale;
+				float px = ((float)x / _volume.voxels - 0.5) * _scale;
+				float py = ((float)y / _volume.voxels - 0.5) * _scale;
+				float pz = ((float)z / _volume.voxels - 0.5) * _scale;
 
 				_volume.at(x, y, z) = std::norm(_psi(px, py, pz));
 			}
@@ -79,31 +80,28 @@ void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 
 void WavefunctionRenderer::handleCameraInput(Camera& cam, Framebuffer& fb)
 {
-	double step = _dt * 3;
+	if (!_dragging)
+		return;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		cam.phi -= step;
+	sf::Vector2i mouse = sf::Mouse::getPosition(*_window);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		cam.phi += step;
+	sf::Vector2i delta = mouse - _lastMouse;
+	_lastMouse = mouse;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		cam.theta += step;
+	float sensitivity = 0.005f;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		cam.theta -= step;
+	cam.phi += delta.x * sensitivity;
+	cam.theta += delta.y * sensitivity;
 
-	sf::Clock clock;
-	sf::Time time = clock.getElapsedTime();
+
 	this->paintScreen(fb);
-	_dt = (clock.getElapsedTime().asSeconds() - time.asSeconds());
 }
 
 void	WavefunctionRenderer::show()
 {
 	//check if everything is set up
 	this->buildVolume();
-	sf::RenderWindow window(sf::VideoMode(_W, _H), _title);
+	_window = new sf::RenderWindow(sf::VideoMode(_W, _H), _title);
 	Framebuffer fb(_W, _H);
 
 	sf::Texture texture;
@@ -115,20 +113,31 @@ void	WavefunctionRenderer::show()
 	paintScreen(fb);
 	_dt = (clock.getElapsedTime().asSeconds() - time.asSeconds());
 
-	while (window.isOpen())
+	while (_window->isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (_window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				_window->close();
+			if (event.type == sf::Event::MouseButtonPressed &&
+				event.mouseButton.button == sf::Mouse::Left)
+			{
+				_dragging = true;
+				_lastMouse = sf::Mouse::getPosition(*_window);
+			}
+			if (event.type == sf::Event::MouseButtonReleased &&
+				event.mouseButton.button == sf::Mouse::Left)
+			{
+				_dragging = false;
+			}
 		}
 
 		handleCameraInput(cam, fb);
 
 		texture.update(fb.raw());
-		window.clear();
-		window.draw(sprite);
-		window.display();
+		_window->clear();
+		_window->draw(sprite);
+		_window->display();
 	}
 }
