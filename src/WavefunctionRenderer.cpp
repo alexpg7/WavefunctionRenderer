@@ -1,4 +1,5 @@
 #include "WavefunctionRenderer.hpp"
+#include <iostream>
 
 WavefunctionRenderer::WavefunctionRenderer()
 {
@@ -7,7 +8,6 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_grid = 64;
 	_scale = 0.1;
 	cam.theta = M_PI / 2.0;
-	cam.fov = 0;
 	cam.phi = 0;
 	raycast = &traceRayDensity;
 	_iso = 0.1f;
@@ -67,6 +67,9 @@ void	WavefunctionRenderer::setIsosurface(float iso)
 
 void WavefunctionRenderer::buildVolume()
 {
+	float	value = -1;
+	float	max = -1;
+	float	min = MAXFLOAT;
 	for (int z = 0; z < _volume.voxels; z++)
 	{
 		for (int y = 0; y < _volume.voxels; y++)
@@ -77,11 +80,19 @@ void WavefunctionRenderer::buildVolume()
 				float py = ((float)y / _volume.voxels - 0.5) * _scale;
 				float pz = ((float)z / _volume.voxels - 0.5) * _scale;
 
-				_volume.at(x, y, z) = std::norm(_psi(px, py, pz));
+				value = std::norm(_psi(px, py, pz));
+				if (value > max)
+					max = value;
+				if (value < min)
+					min = value;
+				_volume.at(x, y, z) = value;
 			}
 		}
 	}
-	_volume.iso = _iso;
+	_volume.max = max;
+	_volume.min = min;
+	_volume.iso = (_iso > _volume.max) ? _volume.max : _iso;
+	_volume.iso = (_iso < _volume.min) ? _volume.min : _iso;
 }
 
 void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
@@ -143,17 +154,58 @@ void	WavefunctionRenderer::show()
 		{
 			if (event.type == sf::Event::Closed)
 				_window->close();
-			if (event.type == sf::Event::MouseButtonPressed &&
+			else if (event.type == sf::Event::MouseButtonPressed &&
 				event.mouseButton.button == sf::Mouse::Left)
 			{
+				if (_zooming)
+				{
+					this->buildVolume();
+					_zooming = false;
+				}
 				_dragging = true;
 				_lastMouse = sf::Mouse::getPosition(*_window);
 			}
-			if (event.type == sf::Event::MouseButtonReleased &&
+			else if (event.type == sf::Event::KeyPressed &&
+				event.key.code == sf::Keyboard::LControl)
+				_ctrl = true;
+			else if (event.type == sf::Event::KeyReleased &&
+				event.key.code == sf::Keyboard::LControl)
+				_ctrl = false;
+			else if (event.type == sf::Event::MouseButtonReleased &&
 				event.mouseButton.button == sf::Mouse::Left)
-			{
 				_dragging = false;
-			}
+			else if (event.type == sf::Event::MouseWheelScrolled)
+			{
+				if (!_ctrl)
+				{
+					if (event.mouseWheelScroll.delta > 0)
+						_scale *= 0.9;
+					else if (event.mouseWheelScroll.delta < 0)
+						_scale /= 0.9;
+					int grid = _grid;
+					setGrid(64);
+					_zooming = true;
+					this->buildVolume();
+					this->paintScreen(fb);
+					setGrid(grid);
+				}
+				else
+				{
+					if (_zooming)
+					{
+						this->buildVolume();
+						_zooming = false;
+					}
+					if (event.mouseWheelScroll.delta > 0)
+						_iso += 0.01 * (_volume.max - _volume.min);
+					else if (event.mouseWheelScroll.delta < 0)
+						_iso -= 0.01 * (_volume.max - _volume.min);
+					_iso = (_iso > _volume.max) ? _volume.max : _iso;
+					_iso = (_iso < _volume.min) ? _volume.min : _iso;
+					_volume.iso = _iso;
+					this->paintScreen(fb);
+				}
+  			}
 		}
 
 		handleCameraInput(cam, fb);

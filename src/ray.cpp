@@ -30,11 +30,11 @@ Ray generateRay(int x, int y, int width, int height, float scale, Camera& cam)
 
 float sampleVolume(const Volume& v, float x, float y, float z, float scale)
 {
-	int ix = (int)(((x / scale) + 0.5) * v.voxels);
+	int ix = (int)(((x / scale) + 0.5) * v.voxels + 0.5);
 
-	int iy = (int)(((y / scale) + 0.5) * v.voxels);
+	int iy = (int)(((y / scale) + 0.5) * v.voxels + 0.5);
 
-	int iz = (int)(((z / scale) + 0.5) * v.voxels);
+	int iz = (int)(((z / scale) + 0.5) * v.voxels + 0.5);
 
 	if (ix < 0 || ix >= v.voxels || iy < 0 || iy >= v.voxels || iz < 0 || iz >= v.voxels)
 		return 0.0;
@@ -55,9 +55,9 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 		float y = r.oy + r.dy * t;
 		float z = r.oz + r.dz * t;
 
-		float d = sampleVolume(v, x, y, z, scale);
+		float d = sampleVolume(v, x, y, z, scale) / v.max;
 
-		acc += d * 0.1 * 25 * step;
+		acc += d * 0.15 * step;
 
 		if (acc > 1.0)
 		{
@@ -87,7 +87,7 @@ Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 		float y = r.oy + r.dy * t;
 		float z = r.oz + r.dz * t;
 
-		float d = sampleVolume(v, x, y, z, scale);
+		float d = sampleVolume(v, x, y, z, scale) / v.max;
 		float sigma = d * densityScale * 100.0f;
 		float p = 1.0f - expf(-sigma * step);
 
@@ -98,7 +98,6 @@ Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 		if (rnd < p)
 		{
 			float intensity = 1.0f - expf(-d * 20.0f);
-			if (intensity > 0.999f) intensity = 1.0f;
 			uint8_t c = (uint8_t)(255.0f * intensity);
 			return {c, c, c, 255};
 		}
@@ -116,6 +115,7 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 	float maxDist = 2.0f * std::sqrt(3.0f) * scale;
 	float iso = v.iso;
 	float opacity = 0.0f;
+	float lastD = 0.0f;
 
 	while (t < maxDist)
 	{
@@ -124,15 +124,19 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 		float z = r.oz + r.dz * t;
 
 		float d = sampleVolume(v, x, y, z, scale);
-		float dist = fabs(d - iso);
+
+		if ((d > iso) && (lastD < iso))
+		{
+			opacity += 0.3;
+		}
+		lastD = d;
+		/*float dist = fabs(d - iso);
 		float w = 0.1 * expf(-(dist * dist) / (2.0f * 0.02f * 0.02f));
 
-		opacity += w * step;
+		opacity += w * step;*/
 
 		t += step;
 	}
-
-	opacity = 1.0f - expf(-opacity * 5.0f);
 
 	if (opacity > 1.0f)
 		opacity = 1.0f;

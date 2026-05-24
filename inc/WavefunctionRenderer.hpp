@@ -12,6 +12,8 @@ struct Volume
 {
 	int	voxels;
 	float	iso;
+	float	max;
+	float	min;
 	std::vector<float> data;
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
@@ -28,7 +30,6 @@ struct Camera
 {
 	float	theta;
 	float	phi;
-	float	fov;
 };
 
 struct Ray
@@ -71,6 +72,8 @@ class WavefunctionRenderer
 		void	paintScreen(Framebuffer& fb);
 		void	handleCameraInput(Camera& cam, Framebuffer& fb);
 		bool	_dragging = false;
+		bool	_zooming = false;
+		bool	_ctrl = false;
 		sf::Vector2i	_lastMouse;
 		sf::RenderWindow *_window;
 		float	_dt;
