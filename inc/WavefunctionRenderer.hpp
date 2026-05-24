@@ -100,3 +100,6 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale);
 Color	traceRayScattering(const Ray& r, const Volume& v, float scale);
 Color	traceRaySurface(const Ray& r, const Volume& v, float scale);
 float	sampleVolume(const Volume& v, float x, float y, float z, float scale);
+
+//orbital
+#include "orbital.tpp"
