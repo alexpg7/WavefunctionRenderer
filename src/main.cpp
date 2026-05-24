@@ -17,10 +17,10 @@ int main()
 {
 	WavefunctionRenderer wave;
 
-	wave.setResolution(800, 800);
+	wave.setResolution(500, 500);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setWaveFunction(psi);
-	wave.setGrid(64);
+	wave.setGrid(128);
 	wave.setScale(5);
 	wave.show();
 }

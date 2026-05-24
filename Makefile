@@ -1,7 +1,7 @@
 NAME = WavefunctionRenderer
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -O3
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 CPPFLAGS = -MMD -MP -I. -Iinc/
 

@@ -35,29 +35,6 @@ struct Ray
 	double dx, dy, dz;
 };
 
-class WavefunctionRenderer
-{
-	private:
-		int	_W;
-		int	_H;
-		std::string	_title = "";
-		void	buildVolume();
-		Volume	_volume = Volume(64);
-		unsigned int	_grid;
-		std::function<std::complex<double>(double, double, double)> _psi = nullptr;
-		double	_scale;
-	public:
-		WavefunctionRenderer();
-		~WavefunctionRenderer();
-		Camera	cam;
-		void	setResolution(int W, int H);
-		void	setTitle(std::string title);
-		void	setWaveFunction(const std::function<std::complex<double>(double, double, double)>& psi);
-		void	setGrid(unsigned int x);
-		void	setScale(double scale);
-		void	show();
-};
-
 struct Color
 {
 	std::uint8_t r, g, b, a;
@@ -76,6 +53,32 @@ class Framebuffer
 		const std::uint8_t* raw() const;
 		int getWidth() const;
 		int getHeight() const;
+};
+
+class WavefunctionRenderer
+{
+	private:
+		int	_W;
+		int	_H;
+		std::string	_title = "";
+		void	buildVolume();
+		void	paintScreen(Framebuffer& fb);
+		void	handleCameraInput(Camera& cam, Framebuffer& fb);
+		sf::Time	_lastRenderTime;
+		Volume	_volume = Volume(64);
+		unsigned int	_grid;
+		std::function<std::complex<double>(double, double, double)> _psi = nullptr;
+		double	_scale;
+	public:
+		WavefunctionRenderer();
+		~WavefunctionRenderer();
+		Camera	cam;
+		void	setResolution(int W, int H);
+		void	setTitle(std::string title);
+		void	setWaveFunction(const std::function<std::complex<double>(double, double, double)>& psi);
+		void	setGrid(unsigned int x);
+		void	setScale(double scale);
+		void	show();
 };
 
 //aux functions

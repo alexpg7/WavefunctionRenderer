@@ -6,15 +6,24 @@ Ray generateRay(int x, int y, int width, int height, double scale, Camera& cam)
 
 	double py = (((double)x / width) - 0.5) * scale;
 
-	double pz = (0.5 - ((double)y / height)) * scale;
+	double px = (((double)y / height) - 0.5) * scale;
 
-	r.ox = -scale;
-	r.oy = py;
-	r.oz = pz;
+	double ox = px;
+	double oy = py;
+	double oz = std::sqrt(3) * scale;
 
-	r.dx = 1.0;
-	r.dy = 0.0;
-	r.dz = 0.0;
+	double	st = std::sin(cam.theta);
+	double	ct = std::cos(cam.theta);
+	double	sp = std::sin(cam.phi);
+	double	cp = std::cos(cam.phi);
+
+	r.ox = ox * cp * ct - oy * sp + oz * cp * st;
+	r.oy = ox * sp * ct + oy * cp + oz * sp * st;
+	r.oz = -ox * st + oz * ct;
+
+	r.dx = -cp * st;
+	r.dy = -sp * st;
+	r.dz = -ct;
 
 	return r;
 }
@@ -49,7 +58,6 @@ Color traceRay(const Ray& r, const Volume& v, double scale)
 		double d = sampleVolume(v, x, y, z, scale);
 
 		acc += d * 0.08;
-		//(1.0 - exp(-d * 2.0)) * step * 0.1;
 
 		if (acc > 1.0)
 			acc = 1.0;

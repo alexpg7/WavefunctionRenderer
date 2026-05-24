@@ -60,9 +60,27 @@ void WavefunctionRenderer::buildVolume()
 	}
 }
 
-void handleCameraInput(Camera& cam)
+void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 {
-	double step = 0.05; // ángulo fijo por pulsación
+	Color	color;
+
+	fb.clear({0, 0, 0, 255});
+	for (int y = 0; y < fb.getHeight(); y++)
+	{
+		for (int x = 0; x < fb.getWidth(); x++)
+		{
+			Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale, cam);
+
+			color = traceRay(ray, _volume, _scale);
+			fb.setPixel(x, y, color);
+		}
+	}
+}
+
+void WavefunctionRenderer::handleCameraInput(Camera& cam, Framebuffer& fb)
+{
+	sf::Clock clock;
+	double step = (clock.getElapsedTime().asSeconds() - _lastRenderTime.asSeconds()) * 3;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		cam.phi -= step;
@@ -75,7 +93,9 @@ void handleCameraInput(Camera& cam)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		cam.theta -= step;
-	cam.theta = std::clamp(cam.theta, 0.01, M_PI - 0.01);
+
+	this->paintScreen(fb);
+	_lastRenderTime = clock.getElapsedTime();
 }
 
 void	WavefunctionRenderer::show()
@@ -89,8 +109,10 @@ void	WavefunctionRenderer::show()
 	texture.create(_W, _H);
 
 	sf::Sprite sprite(texture);
-;
-	Color		color;
+	paintScreen(fb);
+
+	sf::Clock clock;
+	_lastRenderTime = clock.getElapsedTime();
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -100,19 +122,7 @@ void	WavefunctionRenderer::show()
 				window.close();
 		}
 
-		handleCameraInput(cam);
-
-		fb.clear({0, 0, 0, 255});
-		for (int y = 0; y < fb.getHeight(); y++)
-		{
-			for (int x = 0; x < fb.getWidth(); x++)
-			{
-				Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale, cam);
-
-				color = traceRay(ray, _volume, _scale);
-				fb.setPixel(x, y, color);
-			}
-		}
+		handleCameraInput(cam, fb);
 
 		texture.update(fb.raw());
 		window.clear();
