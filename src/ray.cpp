@@ -1,5 +1,16 @@
 #include "WavefunctionRenderer.hpp"
 
+static	Color lerpColor(const Color& c1, const Color& c2, float x)
+{
+	x = std::clamp(x, 0.0f, 1.0f);
+
+	auto lerp = [x](std::uint8_t a, std::uint8_t b) -> std::uint8_t {
+		return static_cast<std::uint8_t>(a + (b - a) * x);
+	};
+
+	return Color{lerp(c1.r, c2.r), lerp(c1.g, c2.g), lerp(c1.b, c2.b), lerp(c1.a, c2.a)};
+}
+
 Ray generateRay(int x, int y, int width, int height, float scale, Camera& cam)
 {
 	Ray r;
@@ -48,8 +59,8 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 	float step = scale / 25.0;
 
 	float acc = 0.0;
-	float max = 2 * std::sqrt(3) * scale;
-	while (t < max)
+	float maxDist = 2 * std::sqrt(3) * scale;
+	while (t < maxDist)
 	{
 		float x = r.ox + r.dx * t;
 		float y = r.oy + r.dy * t;
@@ -68,9 +79,11 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 		t += step;
 	}
 
-	uint8_t c = (uint8_t)(acc * 255.0);
+	//uint8_t c = (uint8_t)(acc * 255.0);
 
-	return {c, c, c, 255};
+	Color color = lerpColor(v.color2, v.color1, acc);
+	color.a = (uint8_t)(255.0f * acc);
+	return color;
 }
 
 Color traceRayScattering(const Ray& r, const Volume& v, float scale)
@@ -98,8 +111,9 @@ Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 		if (rnd < p)
 		{
 			float intensity = 1.0f - expf(-d * 20.0f);
-			uint8_t c = (uint8_t)(255.0f * intensity);
-			return {c, c, c, 255};
+			Color c = lerpColor(v.color2, v.color1, intensity);
+			c.a = (uint8_t)(255.0f * intensity);
+			return c;
 		}
 
 		t += step;

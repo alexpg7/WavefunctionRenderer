@@ -7,6 +7,12 @@
 #include <complex>
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
+
+struct Color
+{
+	std::uint8_t r, g, b, a;
+};
 
 struct Volume
 {
@@ -14,6 +20,9 @@ struct Volume
 	float	iso;
 	float	max;
 	float	min;
+	float	total;
+	Color	color1;
+	Color	color2;
 	std::vector<float> data;
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
@@ -36,11 +45,6 @@ struct Ray
 {
 	float ox, oy, oz;
 	float dx, dy, dz;
-};
-
-struct Color
-{
-	std::uint8_t r, g, b, a;
 };
 
 enum class Mode {
@@ -83,6 +87,8 @@ class WavefunctionRenderer
 		std::function<Color(const Ray&, const Volume&, float)> raycast = nullptr;
 		float	_scale;
 		float	_iso;
+		Color	_color1;
+		Color	_color2;
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
@@ -94,6 +100,7 @@ class WavefunctionRenderer
 		void	setScale(float scale);
 		void	setMode(Mode mode);
 		void	setIsosurface(float iso);
+		void	setColors(Color color1, Color color2);
 		void	show();
 };
 

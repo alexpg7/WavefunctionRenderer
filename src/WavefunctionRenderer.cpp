@@ -1,5 +1,4 @@
 #include "WavefunctionRenderer.hpp"
-#include <iostream>
 
 WavefunctionRenderer::WavefunctionRenderer()
 {
@@ -11,6 +10,8 @@ WavefunctionRenderer::WavefunctionRenderer()
 	cam.phi = 0;
 	raycast = &traceRayDensity;
 	_iso = 0.1f;
+	_color1 = {255, 255, 255, 255};
+	_color2 = {255, 255, 255, 255};
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -60,6 +61,12 @@ void	WavefunctionRenderer::setMode(Mode mode)
 	}
 }
 
+void	WavefunctionRenderer::setColors(Color color1, Color color2)
+{
+	_color1 = color1;
+	_color2 = color2;
+}
+
 void	WavefunctionRenderer::setIsosurface(float iso)
 {
 	_iso = iso;
@@ -70,6 +77,7 @@ void WavefunctionRenderer::buildVolume()
 	float	value = -1;
 	float	max = -1;
 	float	min = MAXFLOAT;
+	_volume.total = 0.0f;
 	for (int z = 0; z < _volume.voxels; z++)
 	{
 		for (int y = 0; y < _volume.voxels; y++)
@@ -85,6 +93,8 @@ void WavefunctionRenderer::buildVolume()
 					max = value;
 				if (value < min)
 					min = value;
+				float side = _scale / (float)_volume.voxels;
+				_volume.total += value * side * side * side;
 				_volume.at(x, y, z) = value;
 			}
 		}
@@ -93,6 +103,8 @@ void WavefunctionRenderer::buildVolume()
 	_volume.min = min;
 	_volume.iso = (_iso > _volume.max) ? _volume.max : _iso;
 	_volume.iso = (_iso < _volume.min) ? _volume.min : _iso;
+	_volume.color1 = _color1;
+	_volume.color2 = _color2;
 }
 
 void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
