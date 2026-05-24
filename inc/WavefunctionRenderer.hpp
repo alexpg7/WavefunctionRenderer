@@ -64,7 +64,7 @@ class WavefunctionRenderer
 		void	buildVolume();
 		void	paintScreen(Framebuffer& fb);
 		void	handleCameraInput(Camera& cam, Framebuffer& fb);
-		sf::Time	_lastRenderTime;
+		double	_dt;
 		Volume	_volume = Volume(64);
 		unsigned int	_grid;
 		std::function<std::complex<double>(double, double, double)> _psi = nullptr;
@@ -84,4 +84,5 @@ class WavefunctionRenderer
 //aux functions
 Ray	generateRay(int x, int y, int width, int height, double scale, Camera& cam);
 Color	traceRay(const Ray& r, const Volume& v, double scale);
+Color	traceRay2(const Ray& r, const Volume& v, double scale);
 double	sampleVolume(const Volume& v, double x, double y, double z, double scale);

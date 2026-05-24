@@ -17,7 +17,7 @@ int main()
 {
 	WavefunctionRenderer wave;
 
-	wave.setResolution(500, 500);
+	wave.setResolution(400, 400);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setWaveFunction(psi);
 	wave.setGrid(128);

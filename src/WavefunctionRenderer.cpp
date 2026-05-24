@@ -79,8 +79,7 @@ void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 
 void WavefunctionRenderer::handleCameraInput(Camera& cam, Framebuffer& fb)
 {
-	sf::Clock clock;
-	double step = (clock.getElapsedTime().asSeconds() - _lastRenderTime.asSeconds()) * 3;
+	double step = _dt * 3;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		cam.phi -= step;
@@ -94,8 +93,10 @@ void WavefunctionRenderer::handleCameraInput(Camera& cam, Framebuffer& fb)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		cam.theta -= step;
 
+	sf::Clock clock;
+	sf::Time time = clock.getElapsedTime();
 	this->paintScreen(fb);
-	_lastRenderTime = clock.getElapsedTime();
+	_dt = (clock.getElapsedTime().asSeconds() - time.asSeconds());
 }
 
 void	WavefunctionRenderer::show()
@@ -109,10 +110,11 @@ void	WavefunctionRenderer::show()
 	texture.create(_W, _H);
 
 	sf::Sprite sprite(texture);
-	paintScreen(fb);
-
 	sf::Clock clock;
-	_lastRenderTime = clock.getElapsedTime();
+	sf::Time time = clock.getElapsedTime();
+	paintScreen(fb);
+	_dt = (clock.getElapsedTime().asSeconds() - time.asSeconds());
+
 	while (window.isOpen())
 	{
 		sf::Event event;

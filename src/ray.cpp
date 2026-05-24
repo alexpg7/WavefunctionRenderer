@@ -42,14 +42,14 @@ double sampleVolume(const Volume& v, double x, double y, double z, double scale)
 	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
-Color traceRay(const Ray& r, const Volume& v, double scale)
+Color	traceRay(const Ray& r, const Volume& v, double scale)
 {
 	double t = 0.0;
-	double step = 0.05;
+	double step = scale / 100.0;
 
 	double acc = 0.0;
-
-	while (t < 10.0)
+	double max = 2 * std::sqrt(3) * scale;
+	while (t < max)
 	{
 		double x = r.ox + r.dx * t;
 		double y = r.oy + r.dy * t;
@@ -57,7 +57,7 @@ Color traceRay(const Ray& r, const Volume& v, double scale)
 
 		double d = sampleVolume(v, x, y, z, scale);
 
-		acc += d * 0.08;
+		acc += d * 0.08 * 5.0 / scale;
 
 		if (acc > 1.0)
 			acc = 1.0;
@@ -68,4 +68,30 @@ Color traceRay(const Ray& r, const Volume& v, double scale)
 	uint8_t c = (uint8_t)(acc * 255.0);
 
 	return {c, c, c, 255};
+}
+
+Color	traceRay2(const Ray& r, const Volume& v, double scale)
+{
+	double t = 0.0;
+	double step = scale / 100.0;
+
+	double acc = 0.0;
+	double max = 2 * std::sqrt(3) * scale;
+	while (t < max)
+	{
+		double x = r.ox + r.dx * t;
+		double y = r.oy + r.dy * t;
+		double z = r.oz + r.dz * t;
+
+		double d = sampleVolume(v, x, y, z, scale);
+
+		acc += d * 0.08 * 5.0 / scale;
+
+		if (acc > 1.0)
+			acc = 1.0;
+
+		t += step;
+	}
+
+	return {255, 255, 255, 255};
 }
