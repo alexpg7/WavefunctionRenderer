@@ -1,7 +1,7 @@
 #include "WavefunctionRenderer.hpp"
 
 // Factorial
-static float factorial(int n)
+inline float factorial(int n)
 {
 	float r = 1.0f;
 	for (int i = 2; i <= n; i++) r *= i;
@@ -9,7 +9,7 @@ static float factorial(int n)
 }
 
 // Laguerre
-static float laguerre(int k, int a, float x)
+inline float laguerre(int k, int a, float x)
 {
 	if (k == 0) return 1.0f;
 	if (k == 1) return 1.0f + a - x;
@@ -97,7 +97,7 @@ template<int n, int l> float Rnl(float r)
 }
 
 // cartesian to spherical
-static void to_spherical(float x, float y, float z, float &r, float &theta, float &phi)
+inline void to_spherical(float x, float y, float z, float &r, float &theta, float &phi)
 {
 	r = std::sqrt(x*x + y*y + z*z);
 	theta = (r == 0.0f) ? 0.0f : std::acos(z / r);
