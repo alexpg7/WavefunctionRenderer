@@ -114,9 +114,7 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 
 	float step = scale / 30.0f;
 	float maxDist = 2.0f * std::sqrt(3.0f) * scale;
-
-	const float iso = 0.1f;
-
+	float iso = v.iso;
 	float opacity = 0.0f;
 
 	while (t < maxDist)
@@ -127,7 +125,7 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 
 		float d = sampleVolume(v, x, y, z, scale);
 		float dist = fabs(d - iso);
-		float w = 0.5 * expf(-(dist * dist) / (2.0f * 0.02f * 0.02f));
+		float w = 0.1 * expf(-(dist * dist) / (2.0f * 0.02f * 0.02f));
 
 		opacity += w * step;
 

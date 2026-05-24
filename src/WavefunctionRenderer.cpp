@@ -10,6 +10,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	cam.fov = 0;
 	cam.phi = 0;
 	raycast = &traceRayDensity;
+	_iso = 0.1f;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -59,6 +60,11 @@ void	WavefunctionRenderer::setMode(Mode mode)
 	}
 }
 
+void	WavefunctionRenderer::setIsosurface(float iso)
+{
+	_iso = iso;
+}
+
 void WavefunctionRenderer::buildVolume()
 {
 	for (int z = 0; z < _volume.voxels; z++)
@@ -75,6 +81,7 @@ void WavefunctionRenderer::buildVolume()
 			}
 		}
 	}
+	_volume.iso = _iso;
 }
 
 void	WavefunctionRenderer::paintScreen(Framebuffer& fb)

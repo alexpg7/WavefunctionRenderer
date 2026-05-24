@@ -22,6 +22,7 @@ int main()
 	wave.setWaveFunction(psi);
 	wave.setGrid(256);
 	wave.setScale(7);
-	wave.setMode(Mode::Surface);
+	wave.setIsosurface(0.1);
+	wave.setMode(Mode::Scattering);
 	wave.show();
 }

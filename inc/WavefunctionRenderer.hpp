@@ -10,7 +10,8 @@
 
 struct Volume
 {
-	int voxels;
+	int	voxels;
+	float	iso;
 	std::vector<float> data;
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
@@ -78,6 +79,7 @@ class WavefunctionRenderer
 		std::function<std::complex<float>(float, float, float)> _psi = nullptr;
 		std::function<Color(const Ray&, const Volume&, float)> raycast = nullptr;
 		float	_scale;
+		float	_iso;
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
@@ -88,6 +90,7 @@ class WavefunctionRenderer
 		void	setGrid(unsigned int x);
 		void	setScale(float scale);
 		void	setMode(Mode mode);
+		void	setIsosurface(float iso);
 		void	show();
 };
 
