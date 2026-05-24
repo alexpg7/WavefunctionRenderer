@@ -22,5 +22,6 @@ int main()
 	wave.setWaveFunction(psi);
 	wave.setGrid(128);
 	wave.setScale(7);
+	wave.setMode(Mode::Surface);
 	wave.show();
 }

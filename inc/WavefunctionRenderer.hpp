@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <complex>
 #include <cmath>
+#include <stdexcept>
 
 struct Volume
 {
@@ -40,6 +41,10 @@ struct Color
 	std::uint8_t r, g, b, a;
 };
 
+enum class Mode {
+	Density, Scattering, Surface
+};
+
 class Framebuffer
 {
 	private:
@@ -71,6 +76,7 @@ class WavefunctionRenderer
 		Volume	_volume = Volume(64);
 		unsigned int	_grid;
 		std::function<std::complex<float>(float, float, float)> _psi = nullptr;
+		std::function<Color(const Ray&, const Volume&, float)> raycast = nullptr;
 		float	_scale;
 	public:
 		WavefunctionRenderer();
@@ -81,11 +87,13 @@ class WavefunctionRenderer
 		void	setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi);
 		void	setGrid(unsigned int x);
 		void	setScale(float scale);
+		void	setMode(Mode mode);
 		void	show();
 };
 
 //aux functions
 Ray	generateRay(int x, int y, int width, int height, float scale, Camera& cam);
-Color	traceRay(const Ray& r, const Volume& v, float scale);
-Color	traceRay2(const Ray& r, const Volume& v, float scale);
+Color	traceRayDensity(const Ray& r, const Volume& v, float scale);
+Color	traceRayScattering(const Ray& r, const Volume& v, float scale);
+Color	traceRaySurface(const Ray& r, const Volume& v, float scale);
 float	sampleVolume(const Volume& v, float x, float y, float z, float scale);

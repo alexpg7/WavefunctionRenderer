@@ -42,10 +42,10 @@ float sampleVolume(const Volume& v, float x, float y, float z, float scale)
 	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
-Color	traceRay(const Ray& r, const Volume& v, float scale)
+Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 {
 	float t = 0.0;
-	float step = scale / 50.0;
+	float step = scale / 25.0;
 
 	float acc = 0.0;
 	float max = 2 * std::sqrt(3) * scale;
@@ -73,7 +73,7 @@ Color	traceRay(const Ray& r, const Volume& v, float scale)
 	return {c, c, c, 255};
 }
 
-Color traceRay2(const Ray& r, const Volume& v, float scale)
+Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 {
 	float t = 0.0f;
 	float step = scale / 10.0f;
@@ -88,7 +88,8 @@ Color traceRay2(const Ray& r, const Volume& v, float scale)
 		float z = r.oz + r.dz * t;
 
 		float d = sampleVolume(v, x, y, z, scale);
-		float p = d * densityScale * step;
+		float sigma = d * densityScale * 100.0f;
+		float p = 1.0f - expf(-sigma * step);
 
 		if (p > 1.0f) p = 1.0f;
 
@@ -96,11 +97,56 @@ Color traceRay2(const Ray& r, const Volume& v, float scale)
 
 		if (rnd < p)
 		{
-			uint8_t c = 255;
+			float intensity = 1.0f - expf(-d * 20.0f);
+			if (intensity > 0.999f) intensity = 1.0f;
+			uint8_t c = (uint8_t)(255.0f * intensity);
 			return {c, c, c, 255};
 		}
 
 		t += step;
 	}
 	return {0, 0, 0, 255};
+}
+
+Color traceRaySurface(const Ray& r, const Volume& v, float scale)
+{
+	float t = 0.0f;
+	float step = scale / 20.0f;
+
+	float maxDist = 2.0f * std::sqrt(3.0f) * scale;
+
+	const float iso = 0.2f;
+
+	float prev = sampleVolume(v,
+							r.ox,
+							r.oy,
+							r.oz,
+							scale);
+
+	float opacity = 0.0f;
+
+	while (t < maxDist)
+	{
+		float x = r.ox + r.dx * t;
+		float y = r.oy + r.dy * t;
+		float z = r.oz + r.dz * t;
+
+		float d = sampleVolume(v, x, y, z, scale);
+
+		// DETECCIÓN DE CRUCE DE ISO-SUPERFICIE
+		if ((prev < iso && d >= iso) || (prev > iso && d <= iso))
+		{
+			opacity += 0.3f; // cuánto suma cada cruce
+		}
+
+		prev = d;
+		t += step;
+	}
+
+	if (opacity > 1.0f)
+		opacity = 1.0f;
+
+	uint8_t c = (uint8_t)(255.0f * opacity);
+
+	return {c, c, c, 255};
 }

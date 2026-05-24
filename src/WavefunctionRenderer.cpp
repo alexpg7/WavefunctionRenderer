@@ -9,6 +9,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	cam.theta = M_PI / 2.0;
 	cam.fov = 0;
 	cam.phi = 0;
+	raycast = &traceRayDensity;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -43,6 +44,21 @@ void	WavefunctionRenderer::setScale(float scale)
 	_scale = scale;
 }
 
+void	WavefunctionRenderer::setMode(Mode mode)
+{
+	switch (mode)
+	{
+		case Mode::Scattering:
+			raycast = &traceRayScattering;
+			break;
+		case Mode::Surface:
+			raycast = &traceRaySurface;
+			break;
+		default:
+			raycast = &traceRayDensity;
+	}
+}
+
 void WavefunctionRenderer::buildVolume()
 {
 	for (int z = 0; z < _volume.voxels; z++)
@@ -72,7 +88,7 @@ void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 		{
 			Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale, cam);
 
-			color = traceRay(ray, _volume, _scale);
+			color = raycast(ray, _volume, _scale);
 			fb.setPixel(x, y, color);
 		}
 	}
