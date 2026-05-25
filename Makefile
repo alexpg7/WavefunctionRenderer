@@ -12,6 +12,7 @@ RM = rm -f
 
 SRC = main.cpp \
 	WavefunctionRenderer.cpp \
+	WavefunctionRendererShow.cpp \
 	Framebuffer.cpp \
 	ray.cpp \
 
