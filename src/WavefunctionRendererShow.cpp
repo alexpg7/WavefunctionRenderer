@@ -20,7 +20,6 @@ void WavefunctionRenderer::buildVolume()
 					max = value;
 				if (value < min)
 					min = value;
-				float side = _scale / (float)_volume.voxels;
 				_volume.at(x, y, z) = value;
 			}
 		}
@@ -79,8 +78,6 @@ void	WavefunctionRenderer::show()
 	texture.create(_W, _H);
 
 	sf::Sprite sprite(texture);
-	sf::Clock clock;
-	sf::Time time = clock.getElapsedTime();
 	paintScreen(fb);
 
 	while (_window->isOpen())

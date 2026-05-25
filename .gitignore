@@ -7,6 +7,9 @@
 *.o
 *.obj
 
+# Saved files
+*.wfr
+
 # Precompiled Headers
 *.gch
 *.pch

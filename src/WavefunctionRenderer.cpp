@@ -12,6 +12,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_iso = 0.1f;
 	_color1 = {255, 255, 255, 255};
 	_color2 = {255, 255, 255, 255};
+	_mode = Mode::Density;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -49,6 +50,7 @@ void	WavefunctionRenderer::setScale(float scale)
 
 void	WavefunctionRenderer::setMode(Mode mode)
 {
+	_mode = mode;
 	switch (mode)
 	{
 		case Mode::Scattering:

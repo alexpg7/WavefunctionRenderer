@@ -8,6 +8,8 @@
 #include <cmath>
 #include <stdexcept>
 #include <iostream>
+#include <string>
+#include <fstream>
 
 struct Color
 {
@@ -69,14 +71,15 @@ class WavefunctionRenderer
 {
 	private:
 		//parameters
+		std::string	_title = "";
 		int	_W;
 		int	_H;
 		unsigned int	_grid;
-		std::string	_title = "";
 		float	_scale;
 		float	_iso;
 		Color	_color1;
 		Color	_color2;
+		Mode	_mode;
 		Volume	_volume = Volume(64);
 
 		// aux variables
@@ -110,6 +113,9 @@ class WavefunctionRenderer
 		void	setIsosurface(float iso);
 		void	setColors(Color color1, Color color2);
 		void	show();
+
+		// saving/loading stats
+		bool	save(std::string name);
 };
 
 //aux functions
