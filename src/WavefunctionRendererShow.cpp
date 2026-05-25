@@ -5,7 +5,6 @@ void WavefunctionRenderer::buildVolume()
 	float	value = -1;
 	float	max = -1;
 	float	min = MAXFLOAT;
-	_volume.total = 0.0f;
 	for (int z = 0; z < _volume.voxels; z++)
 	{
 		for (int y = 0; y < _volume.voxels; y++)
@@ -22,7 +21,6 @@ void WavefunctionRenderer::buildVolume()
 				if (value < min)
 					min = value;
 				float side = _scale / (float)_volume.voxels;
-				_volume.total += value * side * side * side;
 				_volume.at(x, y, z) = value;
 			}
 		}
@@ -84,7 +82,6 @@ void	WavefunctionRenderer::show()
 	sf::Clock clock;
 	sf::Time time = clock.getElapsedTime();
 	paintScreen(fb);
-	_dt = (clock.getElapsedTime().asSeconds() - time.asSeconds());
 
 	while (_window->isOpen())
 	{

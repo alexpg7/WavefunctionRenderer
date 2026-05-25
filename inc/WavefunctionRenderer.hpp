@@ -20,7 +20,6 @@ struct Volume
 	float	iso;
 	float	max;
 	float	min;
-	float	total;
 	Color	color1;
 	Color	color2;
 	std::vector<float> data;
@@ -69,30 +68,39 @@ class Framebuffer
 class WavefunctionRenderer
 {
 	private:
+		//parameters
 		int	_W;
 		int	_H;
+		unsigned int	_grid;
 		std::string	_title = "";
-		void	buildVolume();
-		void	paintScreen(Framebuffer& fb);
-		void	handleCameraInput(Camera& cam, Framebuffer& fb);
+		float	_scale;
+		float	_iso;
+		Color	_color1;
+		Color	_color2;
+		Volume	_volume = Volume(64);
+
+		// aux variables
 		bool	_dragging = false;
 		bool	_zooming = false;
 		bool	_ctrl = false;
 		sf::Vector2i	_lastMouse;
 		sf::RenderWindow *_window;
-		float	_dt;
-		Volume	_volume = Volume(64);
-		unsigned int	_grid;
+
+		// customizable functions
 		std::function<std::complex<float>(float, float, float)> _psi = nullptr;
 		std::function<Color(const Ray&, const Volume&, float)> raycast = nullptr;
-		float	_scale;
-		float	_iso;
-		Color	_color1;
-		Color	_color2;
+
+		// private methods
+		void	buildVolume();
+		void	paintScreen(Framebuffer& fb);
+		void	handleCameraInput(Camera& cam, Framebuffer& fb);
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
+
+		// camera (save angles)
 		Camera	cam;
+
 		void	setResolution(int W, int H);
 		void	setTitle(std::string title);
 		void	setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi);
