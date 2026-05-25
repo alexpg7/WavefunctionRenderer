@@ -16,7 +16,8 @@ WavefunctionRenderer::WavefunctionRenderer()
 
 WavefunctionRenderer::~WavefunctionRenderer()
 {
-	delete _window;
+	if (_window)
+		delete _window;
 }
 
 void	WavefunctionRenderer::setResolution(int W, int H)
@@ -101,8 +102,7 @@ void WavefunctionRenderer::buildVolume()
 	}
 	_volume.max = max;
 	_volume.min = min;
-	_volume.iso = (_iso > _volume.max) ? _volume.max : _iso;
-	_volume.iso = (_iso < _volume.min) ? _volume.min : _iso;
+	_volume.iso = std::clamp(_iso, _volume.min, _volume.max);
 	_volume.color1 = _color1;
 	_volume.color2 = _color2;
 }

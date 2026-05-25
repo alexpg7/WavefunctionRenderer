@@ -58,7 +58,8 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 	float t = 0.0;
 	float step = scale / 25.0;
 
-	float acc = 0.0;
+	float alpha = 0.0f;
+	float sigma = 0.3f;
 	float maxDist = 2 * std::sqrt(3) * scale;
 	while (t < maxDist)
 	{
@@ -66,23 +67,23 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 		float y = r.oy + r.dy * t;
 		float z = r.oz + r.dz * t;
 
-		float d = sampleVolume(v, x, y, z, scale) / v.max;
+		float d = std::sqrt(sampleVolume(v, x, y, z, scale) / v.max);
 
-		acc += d * 0.15 * step;
+		float opacity = 1.0f - std::exp(-sigma * d * step);
 
-		if (acc > 1.0)
-		{
-			acc = 1.0;
+		// front-to-back compositing
+		alpha += (1.0f - alpha) * opacity;
+
+		if (alpha > 0.995f)
 			break;
-		}
 
 		t += step;
 	}
 
 	//uint8_t c = (uint8_t)(acc * 255.0);
 
-	Color color = lerpColor(v.color2, v.color1, acc);
-	color.a = (uint8_t)(255.0f * acc);
+	Color color = lerpColor(v.color2, v.color1, alpha);
+	color.a = (uint8_t)(255.0f * alpha);
 	return color;
 }
 
@@ -155,7 +156,11 @@ Color traceRaySurface(const Ray& r, const Volume& v, float scale)
 	if (opacity > 1.0f)
 		opacity = 1.0f;
 
-	uint8_t c = (uint8_t)(255.0f * opacity);
+	//uint8_t c = (uint8_t)(255.0f * opacity);
 
-	return {c, c, c, 255};
+	//return {c, c, c, 255};
+
+	Color color = lerpColor(v.color2, v.color1, opacity);
+	color.a = (uint8_t)(255.0f * opacity);
+	return color;
 }
