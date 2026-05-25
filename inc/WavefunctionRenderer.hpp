@@ -97,6 +97,7 @@ class WavefunctionRenderer
 		void	buildVolume();
 		void	paintScreen(Framebuffer& fb);
 		void	handleCameraInput(Camera& cam, Framebuffer& fb);
+		void	handleKeys(sf::Event& event, bool& pressS, bool& pressI, bool& pressP);
 	public:
 		WavefunctionRenderer();
 		~WavefunctionRenderer();
@@ -116,6 +117,9 @@ class WavefunctionRenderer
 
 		// saving/loading stats
 		bool	save(std::string name);
+		bool	load(std::string name);
+		void	instructions();
+		void	stats();
 };
 
 //aux functions

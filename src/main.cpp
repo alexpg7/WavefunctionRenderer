@@ -15,6 +15,7 @@ int main()
 	auto psi = orbital<1,1,1>;
 	wave.setWaveFunction(psi);
 	wave.show();
+	wave.save("hola");
 	/*auto psi2 = orbital<3,1,0>;
 	wave.setWaveFunction(psi2);
 	wave.show();
@@ -27,5 +28,5 @@ int main()
 	auto psi5 = orbital<3,2,1>;
 	wave.setWaveFunction(psi5);
 	wave.show();*/
-	wave.save("holaa.wfr");
+	wave.load("hola.wfr");
 }

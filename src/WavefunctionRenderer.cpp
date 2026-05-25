@@ -5,7 +5,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_W = 100;
 	_H = 100;
 	_grid = 64;
-	_scale = 0.1;
+	_scale = 20;
 	cam.theta = M_PI / 2.0;
 	cam.phi = 0;
 	raycast = &traceRayDensity;
