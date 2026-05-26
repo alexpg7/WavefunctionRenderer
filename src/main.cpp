@@ -14,6 +14,7 @@ int main()
 	//wave.setColors({255, 255, 255, 255}, {255, 255, 255, 255});
 	auto psi = orbital<1,1,1>;
 	wave.setWaveFunction(psi);
+	//wave.load("hola.wfr");
 	wave.show();
 	wave.save("hola");
 	/*auto psi2 = orbital<3,1,0>;

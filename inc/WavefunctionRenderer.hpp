@@ -107,6 +107,8 @@ class WavefunctionRenderer
 		Camera	cam;
 
 		void	setResolution(int W, int H);
+		void	setXResolution(int W);
+		void	setYResolution(int H);
 		void	setTitle(std::string title);
 		void	setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi);
 		void	setGrid(unsigned int x);

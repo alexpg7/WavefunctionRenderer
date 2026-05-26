@@ -14,6 +14,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_color2 = {255, 255, 255, 255};
 	_mode = Mode::Density;
 	_rate = 0.01;
+	_window = nullptr;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -25,6 +26,16 @@ WavefunctionRenderer::~WavefunctionRenderer()
 void	WavefunctionRenderer::setResolution(int W, int H)
 {
 	_W = W;
+	_H = H;
+}
+
+void	WavefunctionRenderer::setXResolution(int W)
+{
+	_W = W;
+}
+
+void	WavefunctionRenderer::setYResolution(int H)
+{
 	_H = H;
 }
 

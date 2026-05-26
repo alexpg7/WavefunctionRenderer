@@ -87,10 +87,27 @@ bool	WavefunctionRenderer::save(std::string name)
 	return true;
 }
 
-/*static bool	parse_line(WavefunctionRenderer& wave, std::string line)
+static bool	str_comp(std::string line, std::string attr)
 {
+	if (line.compare(0, attr.length(), attr, 0, attr.length()) == 0)
+		return true;
+	return false;
+}
 
-}*/
+static bool	parse_line(WavefunctionRenderer& wave, std::string line)
+{
+	if (str_comp(line, "title: "))
+	{
+		wave.setTitle(line.substr(7, line.length()));
+		return true;
+	}
+	else if (str_comp(line, "width: "))
+	{
+		wave.setXResolution(std::atoi(line.substr(7, line.length()).c_str()));
+	}
+	return false;
+
+}
 
 bool	WavefunctionRenderer::load(std::string name)
 {
@@ -100,7 +117,7 @@ bool	WavefunctionRenderer::load(std::string name)
 	std::string line;
 	while (std::getline(file, line))
 	{
-		//parse_line(*this, line);
+		parse_line(*this, line);
 	}
 	file.close();
 	return true;
