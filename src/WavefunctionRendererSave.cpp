@@ -39,6 +39,7 @@ void	WavefunctionRenderer::instructions()
 	std::cout << "WavefunctionRenderer instructions:" << std::endl;
 	std::cout << "\t-Mouse drag: Rotate perspective" << std::endl;
 	std::cout << "\t-Mouse scroll: Zoom in/out" << std::endl;
+	std::cout << "\t-Ctrl + mouse scroll: change isosurface by the fixed rate" << std::endl;
 	std::cout << "\t-Ctrl + S: Save stats in a .wfr file" << std::endl;
 	std::cout << "\t-Ctrl + P: Print instructions" << std::endl;
 	std::cout << "\t-Ctrl + I: Print stats" << std::endl;
@@ -51,6 +52,7 @@ void	WavefunctionRenderer::stats()
 	std::cout << "Grid: " << _grid << " voxels" << std::endl;
 	std::cout << "Scale (zoom): " << _scale << std::endl;
 	std::cout << "Isosurface: " << _iso << std::endl;
+	std::cout << "Isosurface change rate: " << _rate * 100 << "%" << std::endl;
 	std::cout << "Primary color: {" << (int)_color1.r << ", " << (int)_color1.g << ", " << (int)_color1.b << ", " << (int)_color1.a << "}" << std::endl;
 	std::cout << "Secondary color: {" << (int)_color2.r << ", " << (int)_color2.g << ", " << (int)_color2.b << ", " << (int)_color2.a << "}" << std::endl;
 	std::cout << "Theta: " << cam.theta << " rad" << std::endl;
@@ -75,6 +77,7 @@ bool	WavefunctionRenderer::save(std::string name)
 	file << "grid: " << _grid << std::endl;
 	file << "scale: " << _scale << std::endl;
 	file << "isosurface: " << _iso << std::endl;
+	file << "rate: " << _rate << std::endl;
 	file << "color1: " << (int)_color1.r << "," << (int)_color1.g << "," << (int)_color1.b << "," << (int)_color1.a << std::endl;
 	file << "color2: " << (int)_color2.r << "," << (int)_color2.g << "," << (int)_color2.b << "," << (int)_color2.a << std::endl;
 	file << "theta: " << cam.theta << std::endl;
@@ -84,6 +87,11 @@ bool	WavefunctionRenderer::save(std::string name)
 	return true;
 }
 
+/*static bool	parse_line(WavefunctionRenderer& wave, std::string line)
+{
+
+}*/
+
 bool	WavefunctionRenderer::load(std::string name)
 {
 	std::ifstream file(name);
@@ -92,7 +100,7 @@ bool	WavefunctionRenderer::load(std::string name)
 	std::string line;
 	while (std::getline(file, line))
 	{
-		std::cout << line << "\n";
+		//parse_line(*this, line);
 	}
 	file.close();
 	return true;

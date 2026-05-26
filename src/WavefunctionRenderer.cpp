@@ -13,6 +13,7 @@ WavefunctionRenderer::WavefunctionRenderer()
 	_color1 = {255, 255, 255, 255};
 	_color2 = {255, 255, 255, 255};
 	_mode = Mode::Density;
+	_rate = 0.01;
 }
 
 WavefunctionRenderer::~WavefunctionRenderer()
@@ -73,4 +74,9 @@ void	WavefunctionRenderer::setColors(Color color1, Color color2)
 void	WavefunctionRenderer::setIsosurface(float iso)
 {
 	_iso = iso;
+}
+
+void	WavefunctionRenderer::setIsosurfaceRate(float rate)
+{
+	_rate = rate;
 }

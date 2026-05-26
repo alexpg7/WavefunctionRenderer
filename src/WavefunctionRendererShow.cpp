@@ -169,9 +169,9 @@ void	WavefunctionRenderer::show()
 						_zooming = false;
 					}
 					if (event.mouseWheelScroll.delta > 0)
-						_iso += 0.01 * (_volume.max - _volume.min);
+						_iso += _rate * (_volume.max - _volume.min);
 					else if (event.mouseWheelScroll.delta < 0)
-						_iso -= 0.01 * (_volume.max - _volume.min);
+						_iso -= _rate * (_volume.max - _volume.min);
 					_iso = (_iso > _volume.max) ? _volume.max : _iso;
 					_iso = (_iso < _volume.min) ? _volume.min : _iso;
 					_volume.iso = _iso;

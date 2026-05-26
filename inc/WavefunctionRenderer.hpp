@@ -77,6 +77,7 @@ class WavefunctionRenderer
 		unsigned int	_grid;
 		float	_scale;
 		float	_iso;
+		float	_rate;
 		Color	_color1;
 		Color	_color2;
 		Mode	_mode;
@@ -112,6 +113,7 @@ class WavefunctionRenderer
 		void	setScale(float scale);
 		void	setMode(Mode mode);
 		void	setIsosurface(float iso);
+		void	setIsosurfaceRate(float rate);
 		void	setColors(Color color1, Color color2);
 		void	show();
 
