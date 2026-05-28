@@ -5,6 +5,8 @@ void WavefunctionRenderer::buildVolume()
 	float	value = -1;
 	float	max = -1;
 	float	min = MAXFLOAT;
+	if (!_psi)
+		throw SetterException("You must set a function to your WavefunctionRenderer object, use .setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)");
 	for (int z = 0; z < _volume.voxels; z++)
 	{
 		for (int y = 0; y < _volume.voxels; y++)
