@@ -1,4 +1,4 @@
-NAME = WavefunctionRenderer
+NAME = libwfr.a
 
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -O3
@@ -10,8 +10,7 @@ OBJ_DIR = obj/
 
 RM = rm -f
 
-SRC = main.cpp \
-	WavefunctionRenderer.cpp \
+SRC = WavefunctionRenderer.cpp \
 	WavefunctionRendererShow.cpp \
 	WavefunctionRendererSave.cpp \
 	Framebuffer.cpp \
@@ -43,8 +42,10 @@ $(OBJ_DIR)%.o: %.cpp
 
 -include $(DEP)
 
+#@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDLIBS)
+
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDLIBS)
+	@ar rcs $(NAME) $(OBJ)
 	@echo "😃 ${BGREEN}Compiled ${BYEL}$(NAME)${NC}"
 
 clean:
@@ -57,5 +58,9 @@ fclean: clean
 	@echo "🗑️  ${BRED}Removed $(NAME)${NC}"
 
 re: fclean all
+
+test: $(NAME)
+	@$(CC) $(CFLAGS) $(CPPFLAGS) ./src/main.cpp -L. -lwfr $(LDLIBS) -o test.out
+	@echo "🧪 ${BGREEN}Compiled ${BYEL}test.out${NC}"
 
 .PHONY: all clean fclean re

@@ -28,6 +28,8 @@ struct Volume
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
 	{
+		if (vox <= 0)
+			throw std::exception();
 	}
 
 	float& at(int x, int y, int z)
@@ -129,6 +131,19 @@ class WavefunctionRenderer
 		bool	load(std::string name);
 		void	instructions();
 		void	stats();
+	class SetterException : public std::exception
+	{
+		private:
+			std::string message;
+
+		public:
+			explicit SetterException(const std::string& msg)
+				: message(msg) {}
+
+			const char* what() const noexcept override {
+				return message.c_str();
+			}
+	};
 };
 
 //aux functions

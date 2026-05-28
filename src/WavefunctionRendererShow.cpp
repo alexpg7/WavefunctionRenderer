@@ -61,7 +61,7 @@ void WavefunctionRenderer::handleCameraInput(Camera& cam, Framebuffer& fb)
 	float sensitivity = 0.005f;
 
 	cam.phi += delta.x * sensitivity;
-	cam.theta += delta.y * sensitivity;
+	cam.theta -= delta.y * sensitivity;
 
 
 	this->paintScreen(fb);

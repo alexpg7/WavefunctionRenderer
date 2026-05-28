@@ -4,7 +4,6 @@ int main()
 {
 	WavefunctionRenderer wave;
 
-	wave.load("hola.wfr");
 	wave.setResolution(400, 400);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setGrid(128);

@@ -25,17 +25,23 @@ WavefunctionRenderer::~WavefunctionRenderer()
 
 void	WavefunctionRenderer::setResolution(int W, int H)
 {
+	if (W <= 0 || H <= 0)
+		throw SetterException("Resolution must be positive an non-zero");
 	_W = W;
 	_H = H;
 }
 
 void	WavefunctionRenderer::setXResolution(int W)
 {
+	if (W <= 0)
+		throw SetterException("Resolution must be positive an non-zero");
 	_W = W;
 }
 
 void	WavefunctionRenderer::setYResolution(int H)
 {
+	if (H <= 0)
+		throw SetterException("Resolution must be positive an non-zero");
 	_H = H;
 }
 
@@ -51,12 +57,16 @@ void	WavefunctionRenderer::setWaveFunction(const std::function<std::complex<floa
 
 void	WavefunctionRenderer::setGrid(unsigned int x)
 {
+	if (x <= 0)
+		throw SetterException("Grid must be positive an non-zero");
 	_grid = x;
 	_volume = Volume(x);
 }
 
 void	WavefunctionRenderer::setScale(float scale)
 {
+	if (scale <= 0)
+		throw SetterException("Scale must be positive an non-zero");
 	_scale = scale;
 }
 
@@ -110,6 +120,8 @@ void	WavefunctionRenderer::setPhi(float phi)
 
 void	WavefunctionRenderer::setIsosurface(float iso)
 {
+	if (iso <= 0)
+		throw SetterException("Isosurface must be positive an non-zero");
 	_iso = iso;
 }
 
