@@ -117,6 +117,11 @@ class WavefunctionRenderer
 		void	setIsosurface(float iso);
 		void	setIsosurfaceRate(float rate);
 		void	setColors(Color color1, Color color2);
+		void	setColor1(Color color1);
+		void	setColor2(Color color2);
+		void	setAngles(float theta, float phi);
+		void	setTheta(float theta);
+		void	setPhi(float phi);
 		void	show();
 
 		// saving/loading stats

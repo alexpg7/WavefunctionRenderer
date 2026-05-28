@@ -4,17 +4,17 @@ int main()
 {
 	WavefunctionRenderer wave;
 
+	wave.load("hola.wfr");
 	wave.setResolution(400, 400);
 	wave.setTitle("WavefunctionRenderer");
 	wave.setGrid(128);
 	wave.setScale(20);
 	wave.setIsosurface(0.1);
-	wave.setMode(Mode::Surface);
+	wave.setMode(Mode::Scattering);
 	wave.setColors({0, 255, 129, 255}, {231, 0, 255, 255});
 	//wave.setColors({255, 255, 255, 255}, {255, 255, 255, 255});
 	auto psi = orbital<1,1,1>;
 	wave.setWaveFunction(psi);
-	//wave.load("hola.wfr");
 	wave.show();
 	wave.save("hola");
 	/*auto psi2 = orbital<3,1,0>;
@@ -29,5 +29,4 @@ int main()
 	auto psi5 = orbital<3,2,1>;
 	wave.setWaveFunction(psi5);
 	wave.show();*/
-	wave.load("hola.wfr");
 }

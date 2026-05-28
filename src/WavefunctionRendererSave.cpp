@@ -23,7 +23,7 @@ static std::string	modetostr(Mode mode)
 	return std::string("Surface");
 }
 
-/*static Mode	inttomode(int mode)
+static Mode	inttomode(int mode)
 {
 	if (mode == 0)
 		return Mode::Density;
@@ -32,7 +32,7 @@ static std::string	modetostr(Mode mode)
 	if (mode == 2)
 		return Mode::Surface;
 	return Mode::Surface;
-}*/
+}
 
 void	WavefunctionRenderer::instructions()
 {
@@ -94,6 +94,33 @@ static bool	str_comp(std::string line, std::string attr)
 	return false;
 }
 
+static Color	parse_color(std::string line)
+{
+	Color	color;
+	int	i = 0;
+
+	color.r = std::atoi(line.substr(i, line.length()).c_str());
+	while (line[i])
+	{
+		if (line[i++] == ',')
+			break;
+	}
+	color.g = std::atoi(line.substr(i, line.length()).c_str());
+	while (line[i])
+	{
+		if (line[i++] == ',')
+			break;
+	}
+	color.b = std::atoi(line.substr(i, line.length()).c_str());
+	while (line[i])
+	{
+		if (line[i++] == ',')
+			break;
+	}
+	color.a = std::atoi(line.substr(i, line.length()).c_str());
+	return color;
+}
+
 static bool	parse_line(WavefunctionRenderer& wave, std::string line)
 {
 	if (str_comp(line, "title: "))
@@ -113,17 +140,47 @@ static bool	parse_line(WavefunctionRenderer& wave, std::string line)
 	}
 	else if (str_comp(line, "grid: "))
 	{
-		wave.setYResolution(std::atoi(line.substr(6, line.length()).c_str()));
+		wave.setGrid(std::atoi(line.substr(6, line.length()).c_str()));
 		return true;
 	}
 	else if (str_comp(line, "scale: "))
 	{
-		wave.setYResolution(std::atof(line.substr(7, line.length()).c_str()));
+		wave.setScale(std::atof(line.substr(7, line.length()).c_str()));
 		return true;
 	}
 	else if (str_comp(line, "isosurface: "))
 	{
-		wave.setYResolution(std::atof(line.substr(12, line.length()).c_str()));
+		wave.setIsosurface(std::atof(line.substr(12, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "rate: "))
+	{
+		wave.setIsosurfaceRate(std::atof(line.substr(6, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "color1: "))
+	{
+		wave.setColor1(parse_color(line.substr(8, line.length())));
+		return true;
+	}
+	else if (str_comp(line, "color2: "))
+	{
+		wave.setColor2(parse_color(line.substr(8, line.length())));
+		return true;
+	}
+	else if (str_comp(line, "theta: "))
+	{
+		wave.setTheta(std::atof(line.substr(7, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "phi: "))
+	{
+		wave.setPhi(std::atof(line.substr(5, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "mode: "))
+	{
+		wave.setMode(inttomode(std::atoi(line.substr(6, line.length()).c_str())));
 		return true;
 	}
 	return false;

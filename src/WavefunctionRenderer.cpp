@@ -82,6 +82,32 @@ void	WavefunctionRenderer::setColors(Color color1, Color color2)
 	_color2 = color2;
 }
 
+void	WavefunctionRenderer::setColor1(Color color1)
+{
+	_color1 = color1;
+}
+
+void	WavefunctionRenderer::setColor2(Color color2)
+{
+	_color2 = color2;
+}
+
+void	WavefunctionRenderer::setAngles(float theta, float phi)
+{
+	cam.theta = theta;
+	cam.phi = phi;
+}
+
+void	WavefunctionRenderer::setTheta(float theta)
+{
+	cam.theta = theta;
+}
+
+void	WavefunctionRenderer::setPhi(float phi)
+{
+	cam.phi= phi;
+}
+
 void	WavefunctionRenderer::setIsosurface(float iso)
 {
 	_iso = iso;
