@@ -75,4 +75,4 @@ Then, you configure your object by setting the different configurations. At the 
 > [!WARNING]
 > At least, you **must** set a function with the ``.setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)`` method in order to start visualizing functions.
 
-## 📘 The orbital tempalte
+## 📘 The orbital template
