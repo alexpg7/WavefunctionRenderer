@@ -40,7 +40,7 @@ git clone https://github.com/alexpg7/WavefunctionRenderer.git WavefunctionRender
 
 It should output the ``libwfr.a`` file, which is a static library.
 
-## 🛠️ Compilation
+# 🛠️ Compilation
 
 To use the library, you have to include the ``./inc/WavefuncrionRenderer.hpp`` header into your project and the ``libwfr.a`` in the location you prefer. To compile it, use the following command:
 
@@ -59,3 +59,20 @@ c++ yourmain.cpp -L. path/to/your/libwfr.a -lsfml-graphics -lsfml-window -lsfml-
 > sudo cp libwfr.a /usr/local/lib/
 > sudo cp -r inc /usr/local/include/
 > ```
+
+# 📔 Usage
+
+## :atom: The ``WavefunctionRenderer`` class
+
+This whole library centers on the ``WavefunctionRenderer`` class. To start visualizing wavefunctions, you must first instantiate a ``WavefucntionRenderer`` object:
+
+```c++
+WavefunctionRenderer  wave
+```
+
+Then, you configure your object by setting the different configurations. At the end, use the ``.show()`` method to open a window with the visualization.
+
+> [!WARNING]
+> At least, you **must** set a function with the ``.setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)`` method in order to start visualizing functions.
+
+## 📘 The orbital tempalte
