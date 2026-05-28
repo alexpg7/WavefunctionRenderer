@@ -42,8 +42,6 @@ $(OBJ_DIR)%.o: %.cpp
 
 -include $(DEP)
 
-#@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDLIBS)
-
 $(NAME): $(OBJ)
 	@ar rcs $(NAME) $(OBJ)
 	@echo "😃 ${BGREEN}Compiled ${BYEL}$(NAME)${NC}"
@@ -58,9 +56,5 @@ fclean: clean
 	@echo "🗑️  ${BRED}Removed $(NAME)${NC}"
 
 re: fclean all
-
-test: $(NAME)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) ./src/main.cpp -L. -lwfr $(LDLIBS) -o test.out
-	@echo "🧪 ${BGREEN}Compiled ${BYEL}test.out${NC}"
 
 .PHONY: all clean fclean re
