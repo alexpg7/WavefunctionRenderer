@@ -104,6 +104,27 @@ static bool	parse_line(WavefunctionRenderer& wave, std::string line)
 	else if (str_comp(line, "width: "))
 	{
 		wave.setXResolution(std::atoi(line.substr(7, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "height: "))
+	{
+		wave.setYResolution(std::atoi(line.substr(8, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "grid: "))
+	{
+		wave.setYResolution(std::atoi(line.substr(6, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "scale: "))
+	{
+		wave.setYResolution(std::atof(line.substr(7, line.length()).c_str()));
+		return true;
+	}
+	else if (str_comp(line, "isosurface: "))
+	{
+		wave.setYResolution(std::atof(line.substr(12, line.length()).c_str()));
+		return true;
 	}
 	return false;
 
