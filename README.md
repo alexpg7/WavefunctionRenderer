@@ -38,3 +38,24 @@ Once you ensure that you have the ``2.6.1`` version, we can now start to install
 git clone https://github.com/alexpg7/WavefunctionRenderer.git WavefunctionRenderer && cd WavefunctionRenderer && make
 ```
 
+It should output the ``libwfr.a`` file, which is a static library.
+
+## 🛠️ Compilation
+
+To use the library, you have to include the ``./inc/WavefuncrionRenderer.hpp`` header into your project and the ``libwfr.a`` in the location you prefer. To compile it, use the following command:
+
+```bash
+c++ yourmain.cpp -L. path/to/your/libwfr.a -lsfml-graphics -lsfml-window -lsfml-system -o yourmain.out
+```
+
+> [!TIP]
+> You can place your ``libwfr.a`` in you project directory and use the linker version of the file:
+> ```bash
+> c++ yourmain.cpp -L. -lwfr -lsfml-graphics -lsfml-window -lsfml-system -o yourmain.out
+> ```
+>
+> Even better, you can copy the library and header into your system directories and use it wherever you want:
+> ```bash
+> sudo cp libwfr.a /usr/local/lib/
+> sudo cp -r inc /usr/local/include/
+> ```
