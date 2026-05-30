@@ -93,7 +93,7 @@ wave.setWaveFunction(psi);
 
 Then, calling the ``.show()`` method should open a tiny window with the following look:
 
-<img src="" width="100">
+<img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrPreset.png" width="100">
 
 For the moment, it does not look quite good, but we can improve it by modifying some settings with the following methods.
 
@@ -119,7 +119,7 @@ Change the wavefunction that will be shown
 
 The visualization is calculated by evaluating the square modulus of the function ($|\psi(x,y,z)|^2$) in each point of the space and allocating it in a ``x``$\times $``x`` $\times $``x`` ``float`` array. Increasing the grid will enhance the quality of the visualization but will also increase (a lot) the memory used when showing the visualization. A recommended grid size is ``x = 256``.
 
-<div><img src="" width="400"> <img src="" width="400"></div>
+<div><img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrGrid20.png" width="400"> <img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrGrid256.png" width="400"></div>
 
 * ``void	setScale(float scale);``
 
@@ -128,7 +128,7 @@ This one changes the *zoom* of the visualization. Luckily, it can be changed in 
 * ``void	setMode(Mode mode);``
 
 Set the mode of visualization, changing it to ``{Mode::Density, Mode::Scattering, Mode::Surface}``, depending on your preference.
-<div><img src="" width="250"> <img src="" width="250"><img src="" width="250"></div>
+<div><img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrDensity.png" width="250"> <img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrScattering.png" width="250"><img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrSurface.png" width="250"></div>
 
 * ``void	setIsosurface(float iso);``
 
