@@ -70,9 +70,23 @@ This whole library centers on the ``WavefunctionRenderer`` class. To start visua
 WavefunctionRenderer  wave
 ```
 
-Then, you configure your object by setting the different configurations. At the end, use the ``.show()`` method to open a window with the visualization.
+Then, you configure your object by setting the different variables. At the end, use the ``.show()`` method to open a window with the visualization.
 
 > [!WARNING]
 > At least, you **must** set a function with the ``.setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)`` method in order to start visualizing functions.
 
 ## 📘 The orbital template
+
+If you want to use the library for the purpose it was built for, you may use the atomic orbital functions. These come defined in the template  ``template<int n, int l, int m> std::complex<float> orbital(float x, float y, float z)`` from ``./inc/orbital.tpp`` and need to be prepared before compilation by defining the quantum numbers $n$, $l$ and $m$. As an example, for $n=2$, $l=1$ and $m=0$,
+
+```c++
+auto psi = orbital<2,1,0>;
+```
+
+Then, set the function with the ``.setWafeFunction()`` method:
+
+
+```c++
+auto psi = orbital<2,1,0>;
+wave.setWaveFunction(psi);
+```
