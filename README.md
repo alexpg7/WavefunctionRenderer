@@ -128,7 +128,7 @@ This one changes the *zoom* of the visualization. Luckily, it can be changed in 
 * ``void	setMode(Mode mode);``
 
 Set the mode of visualization, changing it to ``{Mode::Density, Mode::Scattering, Mode::Surface}``, depending on your preference.
-<div><img src="" width="400"> <img src="" width="400"><img src="" width="400"></div>
+<div><img src="" width="250"> <img src="" width="250"><img src="" width="250"></div>
 
 * ``void	setIsosurface(float iso);``
 
@@ -149,3 +149,25 @@ Set the 2 colors of the visualization. Color 1 is for high probability and Color
 * ``void	setPhi(float phi);``
 
 Set the angles of the camera in spherical coordinates. Thes can be also changed in real time
+
+## 🎮 Controls
+
+While the visualization window is open, you can press Ctrl+I to display the instructions in your terminal (it can also be done with the ``.instructions()`` method).
+
+```output
+WavefunctionRenderer instructions:
+        -Mouse drag: Rotate perspective
+        -Mouse scroll: Zoom in/out
+        -Ctrl + mouse scroll: change isosurface by the fixed rate
+        -Ctrl + S: Save stats in a .wfr file
+        -Ctrl + P: Print instructions
+        -Ctrl + I: Print stats
+```
+
+These do not need much further explanation, except for the saving one.
+
+## 💾 Saving the visualization
+
+As we said, you can save the state of your visualization (all the variables you customized) in a ``.wfr`` file. By pressing Ctrl+S, you save the current state with a timestamp name(in case you find an amazing perspective you want to keep). You can also save it with a custom name by calling ``.save(std::string filename)``.
+
+Why do we want to save it? Because we can then load it with the ``.load(std::string filename)`` method, recovering the state of all the parameters saved (but not he wavefunction!!)
