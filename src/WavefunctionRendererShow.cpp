@@ -33,6 +33,44 @@ void WavefunctionRenderer::buildVolume()
 	_volume.color2 = _color2;
 }
 
+void WavefunctionRenderer::buildCVolume()
+{
+	float	value1 = -1;
+	float	value2 = -1;
+	float	max = -1;
+	float	min = MAXFLOAT;
+	if (!_psi)
+		throw SetterException("You must set a function to your WavefunctionRenderer object, use .setWaveFunction(const std::function<std::complex<float>(float, float, float)>& psi)");
+	for (int z = 0; z < _cvolume.voxels; z++)
+	{
+		for (int y = 0; y < _cvolume.voxels; y++)
+		{
+			for (int x = 0; x < _cvolume.voxels; x++)
+			{
+				float px = ((float)x / _cvolume.voxels - 0.5) * _scale;
+				float py = ((float)y / _cvolume.voxels - 0.5) * _scale;
+				float pz = ((float)z / _cvolume.voxels - 0.5) * _scale;
+
+				value1 = _psi(px, py, pz).real();
+				value2 = _psi(px, py, pz).imag();
+				if (value1 > max)
+					max = value1;
+				if (value1 < min)
+					min = value1;
+				if (value2 > max)
+					max = value2;
+				if (value2 < min)
+					min = value2;
+				_cvolume.at(x, y, z) = std::complex<float>(value1, value2);
+			}
+		}
+	}
+	_cvolume.max = max;
+	_cvolume.min = min;
+	_cvolume.color1 = _color1;
+	_cvolume.color2 = _color2;
+}
+
 void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 {
 	Color	color;
@@ -44,7 +82,7 @@ void	WavefunctionRenderer::paintScreen(Framebuffer& fb)
 		{
 			Ray ray = generateRay(x, y, fb.getWidth(), fb.getHeight(), _scale, cam);
 
-			color = raycast(ray, _volume, _scale);
+			color = raycast(ray, _volume, _cvolume, _scale);
 			fb.setPixel(x, y, color);
 		}
 	}
@@ -105,7 +143,10 @@ void	WavefunctionRenderer::handleKeys(sf::Event& event, bool& pressS, bool& pres
 void	WavefunctionRenderer::show()
 {
 	//check if everything is set up
-	this->buildVolume();
+	if (_mode == Mode::Wave)
+		this->buildCVolume();
+	else
+		this->buildVolume();
 	_window = new sf::RenderWindow(sf::VideoMode(_W, _H), _title);
 	Framebuffer fb(_W, _H);
 	bool	pressS = false;
@@ -148,7 +189,7 @@ void	WavefunctionRenderer::show()
 			else if (event.type == sf::Event::MouseButtonReleased &&
 				event.mouseButton.button == sf::Mouse::Left)
 				_dragging = false;
-			else if (event.type == sf::Event::MouseWheelScrolled)
+			else if (event.type == sf::Event::MouseWheelScrolled && _mode == Mode::Surface)
 			{
 				if (!_ctrl)
 				{

@@ -16,14 +16,35 @@ struct Color
 	std::uint8_t r, g, b, a;
 };
 
+struct CVolume
+{
+	int	voxels = 0;
+	float	max = 0;
+	float	min = 0;
+	Color	color1 = {0,0,0,0};
+	Color	color2 = {0,0,0,0};
+	std::vector<std::complex<float>> data;
+
+	CVolume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
+	{
+		if (vox <= 0)
+			throw std::exception();
+	}
+
+	std::complex<float>& at(int x, int y, int z)
+	{
+		return data[x + y * voxels + z * voxels * voxels];
+	}
+};
+
 struct Volume
 {
-	int	voxels;
-	float	iso;
-	float	max;
-	float	min;
-	Color	color1;
-	Color	color2;
+	int	voxels = 0;
+	float	iso = 0;
+	float	max = 0;
+	float	min = 0;
+	Color	color1 = {0,0,0,0};
+	Color	color2 = {0,0,0,0};
 	std::vector<float> data;
 
 	Volume(int vox): voxels(vox), data(vox * vox * vox, 0.0)
@@ -51,7 +72,7 @@ struct Ray
 };
 
 enum class Mode {
-	Density, Scattering, Surface
+	Density, Scattering, Surface, Wave
 };
 
 class Framebuffer
@@ -84,6 +105,7 @@ class WavefunctionRenderer
 		Color	_color2;
 		Mode	_mode;
 		Volume	_volume = Volume(64);
+		CVolume	_cvolume = CVolume(64);
 
 		// aux variables
 		bool	_dragging = false;
@@ -94,10 +116,11 @@ class WavefunctionRenderer
 
 		// customizable functions
 		std::function<std::complex<float>(float, float, float)> _psi = nullptr;
-		std::function<Color(const Ray&, const Volume&, float)> raycast = nullptr;
+		std::function<Color(const Ray&, const Volume&, const CVolume&, float)> raycast = nullptr;
 
 		// private methods
 		void	buildVolume();
+		void	buildCVolume();
 		void	paintScreen(Framebuffer& fb);
 		void	handleCameraInput(Camera& cam, Framebuffer& fb);
 		void	handleKeys(sf::Event& event, bool& pressS, bool& pressI, bool& pressP);
@@ -148,9 +171,9 @@ class WavefunctionRenderer
 
 //aux functions
 Ray	generateRay(int x, int y, int width, int height, float scale, Camera& cam);
-Color	traceRayDensity(const Ray& r, const Volume& v, float scale);
-Color	traceRayScattering(const Ray& r, const Volume& v, float scale);
-Color	traceRaySurface(const Ray& r, const Volume& v, float scale);
+Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale);
+Color	traceRayScattering(const Ray& r, const Volume& v, const CVolume&, float scale);
+Color	traceRaySurface(const Ray& r, const Volume& v, const CVolume&, float scale);
 float	sampleVolume(const Volume& v, float x, float y, float z, float scale);
 
 //orbital

@@ -9,6 +9,8 @@ static int	modetoint(Mode mode)
 		return 1;
 	if (mode == Mode::Surface)
 		return 2;
+	if (mode == Mode::Wave)
+		return 3;
 	return 2;
 }
 
@@ -20,6 +22,8 @@ static std::string	modetostr(Mode mode)
 		return std::string("Scattering");
 	if (mode == Mode::Surface)
 		return std::string("Surface");
+	if (mode == Mode::Wave)
+		return std::string("Wave");
 	return std::string("Surface");
 }
 
@@ -31,6 +35,8 @@ static Mode	inttomode(int mode)
 		return Mode::Scattering;
 	if (mode == 2)
 		return Mode::Surface;
+	if (mode == 3)
+		return Mode::Wave;
 	return Mode::Surface;
 }
 

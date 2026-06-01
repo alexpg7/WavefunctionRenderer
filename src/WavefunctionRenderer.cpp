@@ -60,7 +60,10 @@ void	WavefunctionRenderer::setGrid(unsigned int x)
 	if (x <= 0)
 		throw SetterException("Grid must be positive an non-zero");
 	_grid = x;
-	_volume = Volume(x);
+	if (_mode == Mode::Wave)
+		_cvolume = CVolume(x);
+	else
+		_volume = Volume(x);
 }
 
 void	WavefunctionRenderer::setScale(float scale)
@@ -79,6 +82,9 @@ void	WavefunctionRenderer::setMode(Mode mode)
 			raycast = &traceRayScattering;
 			break;
 		case Mode::Surface:
+			raycast = &traceRaySurface;
+			break;
+		case Mode::Wave:
 			raycast = &traceRaySurface;
 			break;
 		default:

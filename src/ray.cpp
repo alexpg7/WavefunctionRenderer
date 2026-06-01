@@ -53,7 +53,7 @@ float sampleVolume(const Volume& v, float x, float y, float z, float scale)
 	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
-Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
+Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale)
 {
 	float t = 0.0;
 	float step = scale / 25.0;
@@ -87,7 +87,7 @@ Color	traceRayDensity(const Ray& r, const Volume& v, float scale)
 	return color;
 }
 
-Color traceRayScattering(const Ray& r, const Volume& v, float scale)
+Color traceRayScattering(const Ray& r, const Volume& v, const CVolume&, float scale)
 {
 	float t = 0.0f;
 	float step = scale / 10.0f;
@@ -122,7 +122,7 @@ Color traceRayScattering(const Ray& r, const Volume& v, float scale)
 	return {0, 0, 0, 255};
 }
 
-Color traceRaySurface(const Ray& r, const Volume& v, float scale)
+Color traceRaySurface(const Ray& r, const Volume& v, const CVolume&, float scale)
 {
 	float t = 0.0f;
 
