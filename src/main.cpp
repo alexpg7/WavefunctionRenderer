@@ -9,10 +9,10 @@ int main()
 	wave.setGrid(256);
 	wave.setScale(20);
 	wave.setIsosurface(0.1);
-	wave.setMode(Mode::Density);
+	wave.setMode(Mode::Scattering);
 	wave.setColors({0, 255, 129, 255}, {231, 0, 255, 255});
 	//wave.setColors({255, 255, 255, 255}, {255, 255, 255, 255});
-	auto psi = orbital<2,1,0>;
+	auto psi = orbital<3,1,0>;
 	wave.setWaveFunction(psi);
 	wave.show();
 	wave.save("hola");

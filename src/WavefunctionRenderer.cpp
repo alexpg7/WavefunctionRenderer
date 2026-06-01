@@ -85,7 +85,7 @@ void	WavefunctionRenderer::setMode(Mode mode)
 			raycast = &traceRaySurface;
 			break;
 		case Mode::Wave:
-			raycast = &traceRaySurface;
+			raycast = &traceRayWave;
 			break;
 		default:
 			raycast = &traceRayDensity;

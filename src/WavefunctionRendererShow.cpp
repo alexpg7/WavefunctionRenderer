@@ -51,8 +51,8 @@ void WavefunctionRenderer::buildCVolume()
 				float py = ((float)y / _cvolume.voxels - 0.5) * _scale;
 				float pz = ((float)z / _cvolume.voxels - 0.5) * _scale;
 
-				value1 = _psi(px, py, pz).real();
-				value2 = _psi(px, py, pz).imag();
+				value1 = std::abs(_psi(px, py, pz).real());
+				value2 = std::abs(_psi(px, py, pz).imag());
 				if (value1 > max)
 					max = value1;
 				if (value1 < min)
@@ -171,7 +171,10 @@ void	WavefunctionRenderer::show()
 			{
 				if (_zooming)
 				{
-					this->buildVolume();
+					if (_mode == Mode::Wave)
+						this->buildCVolume();
+					else
+						this->buildVolume();
 					_zooming = false;
 				}
 				_dragging = true;
@@ -189,7 +192,7 @@ void	WavefunctionRenderer::show()
 			else if (event.type == sf::Event::MouseButtonReleased &&
 				event.mouseButton.button == sf::Mouse::Left)
 				_dragging = false;
-			else if (event.type == sf::Event::MouseWheelScrolled && _mode == Mode::Surface)
+			else if (event.type == sf::Event::MouseWheelScrolled)
 			{
 				if (!_ctrl)
 				{
@@ -200,15 +203,21 @@ void	WavefunctionRenderer::show()
 					int grid = _grid;
 					setGrid(64);
 					_zooming = true;
-					this->buildVolume();
+					if (_mode == Mode::Wave)
+						this->buildCVolume();
+					else
+						this->buildVolume();
 					this->paintScreen(fb);
 					setGrid(grid);
 				}
-				else
+				else if (_mode == Mode::Surface)
 				{
 					if (_zooming)
 					{
-						this->buildVolume();
+						if (_mode == Mode::Wave)
+							this->buildCVolume();
+						else
+							this->buildVolume();
 						_zooming = false;
 					}
 					if (event.mouseWheelScroll.delta > 0)

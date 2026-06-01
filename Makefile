@@ -33,7 +33,7 @@ all: $(NAME)
 # Compile .cpp -> .o inside obj/
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -O3 -c $< -o $@
 
 # Special case for files in root (like main.cpp if not in src/)
 $(OBJ_DIR)%.o: %.cpp
@@ -56,7 +56,7 @@ fclean: clean
 	@echo "🗑️  ${BRED}Removed $(NAME)${NC}"
 
 test: $(NAME)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) ./src/main.cpp -L. -lwfr $(LDLIBS) -o test.out
+	@$(CC) $(CFLAGS) $(CPPFLAGS) ./src/main.cpp -L. -lwfr $(LDLIBS) -O3 -o test.out
 	@echo "🧪 ${BGREEN}Compiled ${BYEL}test.out${NC}"
 
 re: fclean all

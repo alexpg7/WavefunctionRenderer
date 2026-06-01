@@ -53,6 +53,20 @@ float sampleVolume(const Volume& v, float x, float y, float z, float scale)
 	return v.data[ix + iy * v.voxels+ iz * v.voxels * v.voxels];
 }
 
+std::complex<float> sampleCVolume(const CVolume& cv, float x, float y, float z, float scale)
+{
+	int ix = (int)(((x / scale) + 0.5) * cv.voxels + 0.5);
+
+	int iy = (int)(((y / scale) + 0.5) * cv.voxels + 0.5);
+
+	int iz = (int)(((z / scale) + 0.5) * cv.voxels + 0.5);
+
+	if (ix < 0 || ix >= cv.voxels || iy < 0 || iy >= cv.voxels || iz < 0 || iz >= cv.voxels)
+		return 0.0;
+
+	return cv.data[ix + iy * cv.voxels+ iz * cv.voxels * cv.voxels];
+}
+
 Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale)
 {
 	float t = 0.0;
@@ -71,7 +85,6 @@ Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale
 
 		float opacity = 1.0f - std::exp(-sigma * d * step);
 
-		// front-to-back compositing
 		alpha += (1.0f - alpha) * opacity;
 
 		if (alpha > 0.995f)
@@ -79,8 +92,6 @@ Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale
 
 		t += step;
 	}
-
-	//uint8_t c = (uint8_t)(acc * 255.0);
 
 	Color color = lerpColor(v.color2, v.color1, alpha);
 	color.a = (uint8_t)(255.0f * alpha);
@@ -145,10 +156,6 @@ Color traceRaySurface(const Ray& r, const Volume& v, const CVolume&, float scale
 			opacity += 0.3;
 		}
 		lastD = d;
-		/*float dist = fabs(d - iso);
-		float w = 0.1 * expf(-(dist * dist) / (2.0f * 0.02f * 0.02f));
-
-		opacity += w * step;*/
 
 		t += step;
 	}
@@ -156,11 +163,59 @@ Color traceRaySurface(const Ray& r, const Volume& v, const CVolume&, float scale
 	if (opacity > 1.0f)
 		opacity = 1.0f;
 
-	//uint8_t c = (uint8_t)(255.0f * opacity);
-
-	//return {c, c, c, 255};
-
 	Color color = lerpColor(v.color2, v.color1, opacity);
 	color.a = (uint8_t)(255.0f * opacity);
 	return color;
+}
+
+
+Color	traceRayWave(const Ray& r, const Volume& v, const CVolume& cv, float scale)
+{
+	float t = 0.0;
+	float step = scale / 25.0;
+	(void)v;
+
+	float alpha1 = 0.0f;
+	float alpha2 = 0.0f;
+	float sigma = 0.3f;
+	float maxDist = 2 * std::sqrt(3) * scale;
+	while (t < maxDist)
+	{
+		float x = r.ox + r.dx * t;
+		float y = r.oy + r.dy * t;
+		float z = r.oz + r.dz * t;
+
+		auto psi = sampleCVolume(cv, x, y, z, scale) / cv.max;
+		float d1 = std::sqrt(std::max(0.0f, psi.real()));
+		float d2 = std::sqrt(std::max(0.0f, psi.imag()));
+
+		float opacity1 = 1.0f - std::exp(-sigma * d1 * step);
+		float opacity2 = 1.0f - std::exp(-sigma * d2 * step);
+
+		alpha1 += (1.0f - alpha1) * opacity1;
+		alpha2 += (1.0f - alpha2) * opacity2;
+
+		if (alpha1 + alpha2 > 0.995f)
+			break;
+
+		t += step;
+	}
+
+	float total = alpha1 + alpha2;
+
+	if (total > 0.0f)
+	{
+		float w1 = alpha1 / total;
+		float w2 = alpha2 / total;
+
+		Color color;
+		color.r = cv.color1.r * w1 + cv.color2.r * w2;
+		color.g = cv.color1.g * w1 + cv.color2.g * w2;
+		color.b = cv.color1.b * w1 + cv.color2.b * w2;
+
+		color.a = (uint8_t)(255.0f * std::min(total, 1.0f));
+
+		return color;
+	}
+	return {0,0,0,0};
 }

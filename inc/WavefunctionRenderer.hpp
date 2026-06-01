@@ -171,9 +171,10 @@ class WavefunctionRenderer
 
 //aux functions
 Ray	generateRay(int x, int y, int width, int height, float scale, Camera& cam);
-Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume&, float scale);
-Color	traceRayScattering(const Ray& r, const Volume& v, const CVolume&, float scale);
-Color	traceRaySurface(const Ray& r, const Volume& v, const CVolume&, float scale);
+Color	traceRayDensity(const Ray& r, const Volume& v, const CVolume& cv, float scale);
+Color	traceRayScattering(const Ray& r, const Volume& v, const CVolume& cv, float scale);
+Color	traceRaySurface(const Ray& r, const Volume& v, const CVolume& cv, float scale);
+Color	traceRayWave(const Ray& r, const Volume& v, const CVolume& cv, float scale);
 float	sampleVolume(const Volume& v, float x, float y, float z, float scale);
 
 //orbital
