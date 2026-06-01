@@ -55,6 +55,10 @@ fclean: clean
 	@$(RM) $(NAME)
 	@echo "🗑️  ${BRED}Removed $(NAME)${NC}"
 
+test: $(NAME)
+	@$(CC) $(CFLAGS) $(CPPFLAGS) ./src/main.cpp -L. -lwfr $(LDLIBS) -o test.out
+	@echo "🧪 ${BGREEN}Compiled ${BYEL}test.out${NC}"
+
 re: fclean all
 
 .PHONY: all clean fclean re

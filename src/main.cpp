@@ -5,14 +5,14 @@ int main()
 	WavefunctionRenderer wave;
 
 	wave.setResolution(400, 400);
-	wave.setTitle("WavefunctionRenderer");
-	wave.setGrid(128);
+	wave.setTitle("Surface");
+	wave.setGrid(256);
 	wave.setScale(20);
 	wave.setIsosurface(0.1);
-	wave.setMode(Mode::Scattering);
+	wave.setMode(Mode::Surface);
 	wave.setColors({0, 255, 129, 255}, {231, 0, 255, 255});
 	//wave.setColors({255, 255, 255, 255}, {255, 255, 255, 255});
-	auto psi = orbital<1,1,1>;
+	auto psi = orbital<2,1,0>;
 	wave.setWaveFunction(psi);
 	wave.show();
 	wave.save("hola");
