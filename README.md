@@ -164,10 +164,16 @@ WavefunctionRenderer instructions:
         -Ctrl + I: Print stats
 ```
 
-These do not need much further explanation, except for the saving one.
+> [!NOTE]
+> The Mouse scroll (Zoom in/out) recalculates all the function evaluations in all the grid, so it sets temporarily the grid to $64^3$. Once you are done scrolling, you can try to move the angles and the wavefunction will be evaluated in the grid you chose in your settings (it might take some seconds)
+
+The rest do not need much further explanation, except for the saving one.
 
 ## 💾 Saving the visualization
 
 As we said, you can save the state of your visualization (all the variables you customized) in a ``.wfr`` file. By pressing Ctrl+S, you save the current state with a timestamp name(in case you find an amazing perspective you want to keep). You can also save it with a custom name by calling ``.save(std::string filename)``.
 
 Why do we want to save it? Because we can then load it with the ``.load(std::string filename)`` method, recovering the state of all the parameters saved (but not he wavefunction!!)
+
+> [!TIP]
+> Since this program runs on CPU, there are some configurations that can take a while to visualize (or may have low fps). You can make use of the ``.save()`` and ``.load()`` methods to find the perspective you want for your wavefunction with low resolution and grid, save it and load it again changing the parameters as you please, without having to search again the perspective.
