@@ -9,11 +9,14 @@ int main()
 	wave.setGrid(256);
 	wave.setScale(20);
 	wave.setIsosurface(0.1);
-	wave.setMode(Mode::Scattering);
+	wave.setMode(Mode::Wave);
 	wave.setColors({0, 255, 129, 255}, {231, 0, 255, 255});
 	//wave.setColors({255, 255, 255, 255}, {255, 255, 255, 255});
-	auto psi = orbital<3,1,0>;
+	auto psi = orbital<4,3,3>;
 	wave.setWaveFunction(psi);
+	wave.load("Surface_1780738262.wfr");
+	wave.setTitle("Wave");
+	wave.setMode(Mode::Wave);
 	wave.show();
 	wave.save("hola");
 	/*auto psi2 = orbital<3,1,0>;

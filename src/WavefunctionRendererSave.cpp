@@ -47,8 +47,8 @@ void	WavefunctionRenderer::instructions()
 	std::cout << "\t-Mouse scroll: Zoom in/out" << std::endl;
 	std::cout << "\t-Ctrl + mouse scroll: change isosurface by the fixed rate" << std::endl;
 	std::cout << "\t-Ctrl + S: Save stats in a .wfr file" << std::endl;
-	std::cout << "\t-Ctrl + P: Print instructions" << std::endl;
-	std::cout << "\t-Ctrl + I: Print stats" << std::endl;
+	std::cout << "\t-Ctrl + P: Print stats" << std::endl;
+	std::cout << "\t-Ctrl + I: Print instructions" << std::endl;
 }
 void	WavefunctionRenderer::stats()
 {
