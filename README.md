@@ -128,10 +128,11 @@ This one changes the *zoom* of the visualization. Luckily, it can be changed in 
 * ``void	setMode(Mode mode);``
 
 Set the mode of visualization, changing it to ``{Mode::Density, Mode::Scattering, Mode::Surface, Mode::Wave}``, depending on your preference. Each mode works differently (and may have different rendering times):
-        * ``Mode::Density``: Shows the probability density of the particle (normalized to the maximum)
-        * ``Mode::Scattering``: Generates random dots according to the probability density (the best one to visualize structures)
-        * ``Mode::Surface``: Shows all the points which have the same probability dnesity, forming an isosurface that can be changed (explained in 🎮 Controls)
-        * ``Mode:Wave``: Shows the absolute value of the real (in ``color1``) and imaginary (in ``color2``) parts of the wavefunction. Due to the values being larger (since the values are not squared like in the probability density) you may have to zoom out to see it clearly.
+* ``Mode``s:
+  * ``Mode::Density``: Shows the probability density of the particle (normalized to the maximum)
+  * ``Mode::Scattering``: Generates random dots according to the probability density (the best one to visualize structures)
+  * ``Mode::Surface``: Shows all the points which have the same probability dnesity, forming an isosurface that can be changed (explained in 🎮 Controls)
+  * ``Mode:Wave``: Shows the absolute value of the real (in ``color1``) and imaginary (in ``color2``) parts of the wavefunction. Due to the values being larger (since the values are not squared like in the probability density) you may have to zoom out to see it clearly.
 <div><img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrDensity.png" width="250"> <img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrScattering.png" width="250"> <img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrSurface.png" width="250"> <img src="https://github.com/alexpg7/Images/blob/main/WavefunctionRenderer/wfrWave.png" width="250"> </div>
 
 * ``void	setIsosurface(float iso);``
